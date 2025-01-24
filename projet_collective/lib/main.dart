@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'data_initializer.dart';
 
+import 'ui/App.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(App());
 }
 
 class MyApp extends StatefulWidget {
@@ -30,12 +32,16 @@ class _MyAppState extends State<MyApp> {
       title: 'Flutter Demo',
       home: Scaffold(
         appBar: AppBar(
+
           title: const Text("Courses List"),
         ),
         body: const Center(
           child: Text("Hello"),
         ),
+
       ),
     );
   }
 }
+
+
