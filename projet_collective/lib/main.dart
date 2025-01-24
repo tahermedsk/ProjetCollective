@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'ui/App.dart';
 void main() {
-  runApp(MyApp());
+  runApp(App());
 }
 
 class MyApp extends StatelessWidget {
@@ -22,4 +22,5 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 
