@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -13,12 +13,13 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       home: Scaffold(
         appBar: AppBar(
-          title: Text("The App Bar"), 
+          title: const Text("The App Bar"), 
         ),
-        body: Center(
+        body: const Center(
           child: Text("Home"), 
         ),
       ),
     );
   }
 }
+
