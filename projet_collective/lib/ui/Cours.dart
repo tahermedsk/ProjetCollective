@@ -48,7 +48,6 @@ class HeaderWidget extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-        const Spacer(), // Espace flexible pour pousser la barre à droite
         // Barre de progression
         Expanded(
           flex: 2,
