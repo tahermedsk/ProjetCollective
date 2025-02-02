@@ -1,33 +1,40 @@
-import 'package:seriouse_game/models/lecon.dart';
+import 'package:seriouse_game/models/page.dart';
 
+import 'mediaCours.dart';
 
 class Cours {
-   int? id; // `id` est nullable pour les nouvelles entrées
+   int? id;
+   int idModule;
    String titre;
-   String description;
-   List<Lecon>? lecons;
+   String contenu;
+   List<Page>? pages;
+
   Cours({
     this.id,
+    required this.idModule,
     required this.titre,
-    required this.description,
+    required this.contenu,
   });
 
-  // Convertir un objet en Map pour SQLite
+  // Convertir une Cours en Map pour SQLite
   Map<String, dynamic> toMap() {
     return {
       'id': id,
+      'id_Module': idModule,
       'titre': titre,
-      'description': description,
+      'contenu': contenu,
     };
   }
 
-  // Convertir une ligne SQLite en objet Cours
-  static Cours fromMap(Map<String, dynamic> map) {
+  // Construire une Cours depuis un Map (SQLite)
+  factory Cours.fromMap(Map<String, dynamic> map) {
     return Cours(
       id: map['id'],
+      idModule: map['id_module'],
       titre: map['titre'],
-      description: map['description'],
+      contenu: map['contenu'],
     );
   }
+
 
 }

@@ -1,15 +1,26 @@
-import 'package:seriouse_game/models/cours.dart';
-import 'package:seriouse_game/DataBase/database_helper.dart';
+import '../DataBase/database_helper.dart';
+import '../models/cours.dart';
 
-class CoursRepository{
+class CoursRepository {
   final DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
-  // --- CRUD Methods ---
-   Future<int> create(Cours cours) async {
+  // Créer une Cours
+  Future<int> create(Cours cours) async {
     final db = await _dbHelper.database;
-    return await db.insert('cours', cours.toMap());
+    return await db.insert('Cours', cours.toMap());
   }
 
+  // Lire toutes les Courss
+  Future<List<Cours>> getAll() async {
+    final db = await _dbHelper.database;
+    final List<Map<String, dynamic>> maps = await db.query('Cours');
+
+    return List.generate(maps.length, (i) {
+      return Cours.fromMap(maps[i]);
+    });
+  }
+
+  // Lire une Cours par son ID
   Future<Cours?> getById(int id) async {
     final db = await _dbHelper.database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -24,29 +35,24 @@ class CoursRepository{
     return null;
   }
 
-   Future<List<Cours>> getAll() async {
-    final db = await _dbHelper.database;
-    final result = await db.query('Cours');
-    return result.map((map) => Cours.fromMap(map)).toList();
-  }
-
-   Future<int> update(Cours cours) async {
+  // Mettre à jour une Cours
+  Future<int> update(Cours cours) async {
     final db = await _dbHelper.database;
     return await db.update(
-      'cours',
+      'Cours',
       cours.toMap(),
       where: 'id = ?',
       whereArgs: [cours.id],
     );
   }
 
-   Future<int> delete(int id) async {
+  // Supprimer une Cours
+  Future<int> delete(int id) async {
     final db = await _dbHelper.database;
     return await db.delete(
-      'cours',
+      'Cours',
       where: 'id = ?',
       whereArgs: [id],
     );
   }
-
 }

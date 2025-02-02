@@ -2,7 +2,7 @@ import 'package:seriouse_game/models/motsCroises.dart';
 
 class MiniJeu {
    int? id;
-   int idLecon;
+   int idCours;
    String nom;
    String? description;
    int progression;
@@ -10,7 +10,7 @@ class MiniJeu {
 
   MiniJeu({
     this.id,
-    required this.idLecon,
+    required this.idCours,
     required this.nom,
     this.description,
     required this.progression,
@@ -20,7 +20,7 @@ class MiniJeu {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'id_lecon': idLecon,
+      'id_cours': idCours,
       'nom': nom,
       'description': description,
       'progression': progression,
@@ -31,7 +31,7 @@ class MiniJeu {
   factory MiniJeu.fromMap(Map<String, dynamic> map) {
     return MiniJeu(
       id: map['id'],
-      idLecon: map['id_lecon'],
+      idCours: map['id_cours'],
       nom: map['nom'],
       description: map['description'],
       progression: map['progression'],

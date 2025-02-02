@@ -1,36 +1,73 @@
-import 'package:seriouse_game/models/cours.dart';
-import 'package:seriouse_game/models/lecon.dart';
+import 'package:seriouse_game/models/module.dart';
 import 'package:seriouse_game/models/mot.dart';
 import 'package:seriouse_game/models/motsCroises.dart';
 import 'package:seriouse_game/models/minijeu.dart';
-import 'package:seriouse_game/models/mediaLecon.dart';
-
 import 'package:seriouse_game/repositories/coursRepository.dart';
-import 'package:seriouse_game/repositories/leconRepository.dart';
+
+import 'package:seriouse_game/repositories/moduleRepository.dart';
 import 'package:seriouse_game/repositories/motRepository.dart';
 import 'package:seriouse_game/repositories/motsCroisesRepository.dart';
 import 'package:seriouse_game/repositories/minijeuRepository.dart';
-import 'package:seriouse_game/repositories/mediaLeconRepository.dart';
+import 'package:seriouse_game/repositories/mediaCoursRepository.dart';
+import 'package:seriouse_game/repositories/pageRepository.dart';
+
+import 'DataBase/database_helper.dart';
+import 'models/cours.dart';
+import 'models/mediaCours.dart';
+import 'models/page.dart';
 
 Future<void> insertSampleData() async {
+  await DatabaseHelper.instance.resetDatabase();
+
+  final moduleRepository = ModuleRepository();
   final coursRepository = CoursRepository();
-  final leconRepository = LeconRepository();
   final motRepository = MotRepository();
   final motsCroisesRepository = MotsCroisesRepository();
   final miniJeuRepository = MiniJeuRepository();
-  final mediaLeconRepository = MediaLeconRepository();
+  final mediaCoursRepository = MediaCoursRepository();
+  final pageRepository = PageRepository();
 
-  // Création d'un Cours
-  final cours = Cours(titre: 'Cours de Journalisme', description: 'Introduction au journalisme');
+  // Création d'un Module
+  final module = Module(
+      titre: 'Module de Journalisme',
+      description: 'Introduction au journalisme');
+  final moduleId = await moduleRepository.create(module);
+
+  // Création d'une Cours
+  final cours = Cours(
+      idModule: moduleId,
+      titre: 'Introduction à la presse',
+      contenu: 'Le journalisme moderne...');
   final coursId = await coursRepository.create(cours);
 
-  // Création d'une Lecon
-  final lecon = Lecon(idCours: coursId, titre: 'Introduction à la presse', contenu: 'Le journalisme moderne...');
-  final leconId = await leconRepository.create(lecon);
+  // Création d'une Page liée au cours
+  final page = Page(idCours: coursId, ordre: 1);
+  final pageId = await pageRepository.create(page);
+
+// Insertion de MediaCours lié à cette page
+  final mediaCours = MediaCours(
+      idPage: pageId,
+      ordre: 1,
+      url: 'https://media.example.com/video.mp4',
+      type: 'video',
+      caption: 'Vidéo explicative');
+  await mediaCoursRepository.create(mediaCours);
 
   // Création de Mots (Mots pour le MotsCroises)
-  final mot1 = Mot(idMotsCroises: 1, mot: 'journalisme', indice: 'Domaine d’étude', direction: 'horizontal', positionDepartX: 0, positionDepartY: 0);
-  final mot2 = Mot(idMotsCroises: 1, mot: 'presse', indice: 'Média écrit', direction: 'vertical', positionDepartX: 1, positionDepartY: 1);
+  final mot1 = Mot(
+      idMotsCroises: 1,
+      mot: 'journalisme',
+      indice: 'Domaine d’étude',
+      direction: 'horizontal',
+      positionDepartX: 0,
+      positionDepartY: 0);
+  final mot2 = Mot(
+      idMotsCroises: 1,
+      mot: 'presse',
+      indice: 'Média écrit',
+      direction: 'vertical',
+      positionDepartX: 1,
+      positionDepartY: 1);
   await motRepository.create(mot1);
   await motRepository.create(mot2);
 
@@ -39,60 +76,25 @@ Future<void> insertSampleData() async {
   final motsCroisesId = await motsCroisesRepository.create(motsCroises);
 
   // Création d'un MiniJeu
-  final miniJeu = MiniJeu(idLecon: leconId, nom: 'Jeu de mots croisés', description: 'Mini-jeu de mots croisés sur le journalisme', progression: 0);
+  final miniJeu = MiniJeu(
+      idCours: coursId,
+      nom: 'Jeu de mots croisés',
+      description: 'Mini-jeu de mots croisés sur le journalisme',
+      progression: 0);
   final miniJeuId = await miniJeuRepository.create(miniJeu);
-
-  // Création d'un MediaLecon
-  final mediaLecon = MediaLecon(idLecon: leconId, id: 1, url: 'https://media.example.com/video.mp4', type: 'video', caption: 'Vidéo explicative');
-  await mediaLeconRepository.create(mediaLecon);
 
   print('Toutes les données d\'exemple ont été insérées avec succès.');
 }
 
-
 Future<void> testRepositories() async {
+  final moduleRepository = ModuleRepository();
   final coursRepository = CoursRepository();
-  final leconRepository = LeconRepository();
   final motRepository = MotRepository();
   final motsCroisesRepository = MotsCroisesRepository();
   final miniJeuRepository = MiniJeuRepository();
-  final mediaLeconRepository = MediaLeconRepository();
+  final mediaCoursRepository = MediaCoursRepository();
+  final pageRepository = PageRepository();
 
-  // --- Test Cours ---
-  print('--- Test Cours ---');
-
-  // Récupérer tous les cours
-  final allCourses = await coursRepository.getAll();
-  print('Cours disponibles : ${allCourses.map((e) => e.titre).toList()}');
-
-  // Récupérer un cours par ID
-  final cours = allCourses.first;
-  final fetchedCours = await coursRepository.getById(cours.id!);
-  print('Cours récupéré par ID : ${fetchedCours?.titre}');
-
-
-
-  // Supprimer un cours
-  await coursRepository.delete(cours.id!);
-  print('Cours supprimé.');
-
-  // --- Test Lecon ---
-  print('--- Test Leçon ---');
-
-  // Récupérer toutes les leçons
-  final allLecons = await leconRepository.getAll();
-  print('Leçons disponibles : ${allLecons.map((e) => e.titre).toList()}');
-
-  // Récupérer une leçon par ID
-  final lecon = allLecons.first;
-  final fetchedLecon = await leconRepository.getById(lecon.id!);
-  print('Leçon récupérée par ID : ${fetchedLecon?.titre}');
-
- 
-
-  // Supprimer une leçon
-  await leconRepository.delete(lecon.id!);
-  print('Leçon supprimée.');
 
   // --- Test Mot ---
   print('--- Test Mot ---');
@@ -106,7 +108,6 @@ Future<void> testRepositories() async {
   final fetchedMot = await motRepository.getById(mot.id!);
   print('Mot récupéré par ID : ${fetchedMot?.mot}');
 
-
   // Supprimer un mot
   await motRepository.delete(mot.id!);
   print('Mot supprimé.');
@@ -116,13 +117,14 @@ Future<void> testRepositories() async {
 
   // Récupérer tous les mots croisés
   final allMotsCroises = await motsCroisesRepository.getAll();
-  print('Mots croisés disponibles : ${allMotsCroises.map((e) => e.tailleGrille).toList()}');
+  print(
+      'Mots croisés disponibles : ${allMotsCroises.map((e) => e.tailleGrille).toList()}');
 
   // Récupérer un mots croisés par ID
   final motsCroises = allMotsCroises.first;
-  final fetchedMotsCroises = await motsCroisesRepository.getById(motsCroises.id!);
+  final fetchedMotsCroises =
+      await motsCroisesRepository.getById(motsCroises.id!);
   print('Mots croisés récupérés par ID : ${fetchedMotsCroises?.tailleGrille}');
-
 
   // Supprimer un mots croisés
   await motsCroisesRepository.delete(motsCroises.id!);
@@ -140,25 +142,74 @@ Future<void> testRepositories() async {
   final fetchedMiniJeu = await miniJeuRepository.getById(miniJeu.id!);
   print('Mini-jeu récupéré par ID : ${fetchedMiniJeu?.nom}');
 
-
   // Supprimer un mini-jeu
   await miniJeuRepository.delete(miniJeu.id!);
   print('Mini-jeu supprimé.');
 
-  // --- Test MediaLecon ---
-  print('--- Test MediaLecon ---');
+  // --- Test MediaCours ---
+  print('--- Test MediaCours ---');
 
   // Récupérer tous les médias
-  final allMedias = await mediaLeconRepository.getAll();
+  final allMedias = await mediaCoursRepository.getAll();
   print('Médias disponibles : ${allMedias.map((e) => e.url).toList()}');
 
   // Récupérer un média par ID
   final media = allMedias.first;
-  final fetchedMedia = await mediaLeconRepository.getById(media.id);
+  final fetchedMedia = await mediaCoursRepository.getById(media.id!);
   print('Média récupéré par ID : ${fetchedMedia?.url}');
 
-
   // Supprimer un média
-  await mediaLeconRepository.delete(media.id);
+  await mediaCoursRepository.delete(media.id!);
   print('Média supprimé.');
+
+  // --- Test Page ---
+  print('--- Test Page ---');
+
+// Récupérer toutes les pages
+  final allPages = await pageRepository.getAll();
+  print('Pages disponibles : ${allPages.map((e) => e.id).toList()}');
+
+// Récupérer une page par ID
+  if (allPages.isNotEmpty) {
+    final page = allPages.first;
+    final fetchedPage = await pageRepository.getById(page.id!);
+    print('Page récupérée par ID : ${fetchedPage?.id} liée au cours : ${fetchedPage?.idCours}');
+
+    // Supprimer une page
+    await pageRepository.delete(page.id!);
+    print('Page supprimée.');
+  } else {
+    print('Aucune page disponible pour le test.');
+  }
+
+  // --- Test Cours ---
+  print('--- Test Cours ---');
+
+  // Récupérer toutes les courss
+  final allCours = await coursRepository.getAll();
+  print('Cours disponibles : ${allCours.map((e) => e.titre).toList()}');
+
+  // Récupérer une cours par ID
+  final cours = allCours.first;
+  final fetchedCours = await coursRepository.getById(cours.id!);
+  print('Cours récupérée par ID : ${fetchedCours?.titre}');
+
+  // Supprimer une cours
+  await coursRepository.delete(cours.id!);
+  print('Cours supprimée.');
+  // --- Test Module ---
+  print('--- Test Module ---');
+
+  // Récupérer tous les module
+  final allModulees = await moduleRepository.getAll();
+  print('Module disponibles : ${allModulees.map((e) => e.titre).toList()}');
+
+  // Récupérer un module par ID
+  final module = allModulees.first;
+  final fetchedModule = await moduleRepository.getById(module.id!);
+  print('Module récupéré par ID : ${fetchedModule?.titre}');
+
+  // Supprimer un module
+  await moduleRepository.delete(module.id!);
+  print('Module supprimé.');
 }

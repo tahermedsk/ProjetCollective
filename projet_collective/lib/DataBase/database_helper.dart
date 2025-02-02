@@ -4,6 +4,7 @@ import 'package:path/path.dart';
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
   static Database? _database;
+
   DatabaseHelper._init();
 
   // Méthode pour obtenir la base de données
@@ -26,13 +27,12 @@ class DatabaseHelper {
         await _createDB(db, 1);
       },
     );
-
   }
 
   // Crée les tables dans la base de données
   Future<void> _createDB(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE IF NOT EXISTS cours (
+      CREATE TABLE IF NOT EXISTS module (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         titre TEXT NOT NULL,
         description TEXT NOT NULL
@@ -40,24 +40,32 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE IF NOT EXISTS lecon (
+      CREATE TABLE IF NOT EXISTS cours (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         titre TEXT NOT NULL,
         contenu TEXT NOT NULL,
-        id_cours INTEGER,
-        FOREIGN KEY (id_cours) REFERENCES cours (id)
+        id_module INTEGER,
+        FOREIGN KEY (id_module) REFERENCES module (id)
       );
     ''');
 
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS page (
+       id INTEGER PRIMARY KEY AUTOINCREMENT,
+       ordre INTEGER NOT NULL,
+       id_cours INTEGER NOT NULL,
+       FOREIGN KEY (id_cours) REFERENCES cours (id) ON DELETE CASCADE ON UPDATE CASCADE
+      );
+    ''');
 
     await db.execute('''
     CREATE TABLE IF NOT EXISTS MiniJeu (
      id INTEGER PRIMARY KEY AUTOINCREMENT,
-    id_lecon INTEGER NOT NULL,
+    id_cours INTEGER NOT NULL,
     nom TEXT NOT NULL,
     description TEXT,
     progression INTEGER NOT NULL,
-    FOREIGN KEY (id_lecon) REFERENCES lecon (id)
+    FOREIGN KEY (id_cours) REFERENCES cours (id)
   );
 ''');
 
@@ -85,18 +93,17 @@ class DatabaseHelper {
       );
     ''');
 
-
     await db.execute('''
-  CREATE TABLE IF NOT EXISTS MediaLecon (
+  CREATE TABLE IF NOT EXISTS MediaCours (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    id_lecon INTEGER NOT NULL,
+    id_page INTEGER NOT NULL,
+    ordre INTEGER NOT NULL,
     url TEXT NOT NULL,
     type TEXT NOT NULL,
     caption TEXT,
-    FOREIGN KEY (id_lecon) REFERENCES lecon (id) ON DELETE CASCADE
+    FOREIGN KEY (id_page) REFERENCES page (id) ON DELETE CASCADE
   );
 ''');
-
   }
 
   // Supprime la base de données et recrée les tables
