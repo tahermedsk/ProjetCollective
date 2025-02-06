@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:seriouse_game/DataBase/database_helper.dart';
+import 'package:seriouse_game/models/cours.dart';
+import 'package:seriouse_game/services/coursService.dart';
 import 'data_initializer.dart';
 
 import 'ui/App.dart';
@@ -23,8 +25,9 @@ class _MyAppState extends State<MyApp> {
 
     // Insérer des données d'exemple après le lancement de l'UI
     Future.delayed(Duration.zero, () async {
-      await insertSampleData();  // Appel de la fonction qui insère les données via les repositories
-      await testRepositories();
+      await insertSampleData();
+
+      //await testRepositories();
     });
   }
 
