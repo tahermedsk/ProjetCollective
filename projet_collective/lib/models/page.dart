@@ -2,11 +2,13 @@ class Page {
   int? id;
   int ordre;
   int idCours;
+  String? description ;
 
   Page({
     this.id,
     required this.ordre,
     required this.idCours,
+     this.description ,
   });
 
   // Convertir un objet Page en Map pour SQLite
@@ -15,6 +17,7 @@ class Page {
       'id': id,
       'ordre': ordre,
       'id_cours': idCours,
+      'description':description,
     };
   }
 
@@ -24,6 +27,7 @@ class Page {
       id: map['id'],
       ordre: map['ordre'],
       idCours: map['id_cours'],
+      description: map['description']
     );
   }
 }

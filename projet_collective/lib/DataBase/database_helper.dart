@@ -52,6 +52,7 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS page (
        id INTEGER PRIMARY KEY AUTOINCREMENT,
+       description TEXT ,
        ordre INTEGER NOT NULL,
        id_cours INTEGER NOT NULL,
        FOREIGN KEY (id_cours) REFERENCES cours (id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -104,6 +105,16 @@ class DatabaseHelper {
     FOREIGN KEY (id_page) REFERENCES page (id) ON DELETE CASCADE
   );
 ''');
+    await db.execute('''
+    CREATE TABLE IF NOT EXISTS ObjectifCours (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id_cours INTEGER NOT NULL,
+        description TEXT NOT NULL,
+        FOREIGN KEY (id_cours) REFERENCES cours (id) ON DELETE CASCADE
+    );
+''');
+
+
   }
 
   // Supprime la base de données et recrée les tables

@@ -5,8 +5,8 @@ import 'data_initializer.dart';
 import 'ui/App.dart';
 
 void main() {
-  runApp(App());
-  //runApp(MyApp());
+  //runApp(App());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {

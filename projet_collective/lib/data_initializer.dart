@@ -9,11 +9,13 @@ import 'package:seriouse_game/repositories/motRepository.dart';
 import 'package:seriouse_game/repositories/motsCroisesRepository.dart';
 import 'package:seriouse_game/repositories/minijeuRepository.dart';
 import 'package:seriouse_game/repositories/mediaCoursRepository.dart';
+import 'package:seriouse_game/repositories/objectifCoursRepository.dart';
 import 'package:seriouse_game/repositories/pageRepository.dart';
 
 import 'DataBase/database_helper.dart';
 import 'models/cours.dart';
 import 'models/mediaCours.dart';
+import 'models/objectifCours.dart';
 import 'models/page.dart';
 
 Future<void> insertSampleData() async {
@@ -26,6 +28,7 @@ Future<void> insertSampleData() async {
   final miniJeuRepository = MiniJeuRepository();
   final mediaCoursRepository = MediaCoursRepository();
   final pageRepository = PageRepository();
+  final objectifCoursRepository = ObjectifCoursRepository();
 
   // Création d'un Module
   final module = Module(
@@ -40,8 +43,24 @@ Future<void> insertSampleData() async {
       contenu: 'Le journalisme moderne...');
   final coursId = await coursRepository.create(cours);
 
+
+  // Création des objectifs du cours
+  final objectif1 = ObjectifCours(
+    idCours: coursId,
+    description: 'Comprendre les bases du journalisme',
+  );
+  final objectif2 = ObjectifCours(
+    idCours: coursId,
+    description: 'Apprendre les techniques d’interview',
+  );
+  await objectifCoursRepository.create(objectif1);
+  await objectifCoursRepository.create(objectif2);
+  print('Objectifs du cours ajoutés.');
+
+
+
   // Création d'une Page liée au cours
-  final page = Page(idCours: coursId, ordre: 1);
+  final page = Page(idCours: coursId, ordre: 1,description: "page 1");
   final pageId = await pageRepository.create(page);
 
 // Insertion de MediaCours lié à cette page
@@ -94,9 +113,26 @@ Future<void> testRepositories() async {
   final miniJeuRepository = MiniJeuRepository();
   final mediaCoursRepository = MediaCoursRepository();
   final pageRepository = PageRepository();
+  final objectifCoursRepository = ObjectifCoursRepository();
 
+  // --- Test Objectif ---
+  print('--- Test Objectif ---');
 
-  // --- Test Mot ---
+// Récupérer tous les objectifs
+  final allObjectifs = await objectifCoursRepository.getAll();
+  print('Objectifs disponibles : ${allObjectifs.map((e) => e.description).toList()}');
+
+// Récupérer un objectif par ID
+  final objectif = allObjectifs.first;
+  final fetchedObjectif = await objectifCoursRepository.getById(objectif.id!);
+  print('Objectif récupéré par ID : ${fetchedObjectif?.description}');
+
+// Supprimer un objectif
+  await objectifCoursRepository.delete(objectif.id!);
+  print('Objectif supprimé.');
+  
+
+    // --- Test Mot ---
   print('--- Test Mot ---');
 
   // Récupérer tous les mots

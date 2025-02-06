@@ -1,3 +1,4 @@
+import 'package:seriouse_game/models/objectifCours.dart';
 import 'package:seriouse_game/models/page.dart';
 
 import 'mediaCours.dart';
@@ -8,7 +9,7 @@ class Cours {
    String titre;
    String contenu;
    List<Page>? pages;
-
+   List<ObjectifCours>? objectifs;
   Cours({
     this.id,
     required this.idModule,
