@@ -1,15 +1,17 @@
 import '../models/cours.dart';
-import '../models/objectifCours.dart';
 import '../repositories/coursRepository.dart';
 import '../repositories/objectifCoursRepository.dart';
 
 class CoursService {
-  final CoursRepository _coursRepository = CoursRepository();
-  final ObjectifCoursRepository _objectifRepository = ObjectifCoursRepository();
+  final CoursRepository _coursRepository;
+  final ObjectifCoursRepository _objectifRepository;
+
+  // Injection via le constructeur
+  CoursService(this._coursRepository, this._objectifRepository);
 
   // Récupérer un cours et lui ajouter ses objectifs
   Future<Cours?> getCoursWithObjectifs(int coursId) async {
-    // Récupérer le cours par ID
+    // Récupérer le cours par son ID
     final cours = await _coursRepository.getById(coursId);
     if (cours == null) return null;
 

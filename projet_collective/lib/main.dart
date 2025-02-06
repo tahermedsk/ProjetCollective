@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:seriouse_game/DataBase/database_helper.dart';
 import 'package:seriouse_game/models/cours.dart';
+import 'package:seriouse_game/service_locator.dart';
 import 'package:seriouse_game/services/coursService.dart';
 import 'data_initializer.dart';
 
 import 'ui/App.dart';
 
 void main() {
-  //runApp(App());
-  runApp(MyApp());
+  setupLocator();
+  runApp(App());
+  //runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {

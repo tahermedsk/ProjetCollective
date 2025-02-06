@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:seriouse_game/widgets/DescriptionView.dart';
 
 class App extends StatefulWidget {
   @override
