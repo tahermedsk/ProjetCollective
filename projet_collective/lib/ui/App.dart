@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:seriouse_game/models/mediaCours.dart';
+import 'package:seriouse_game/ui/Contenu/WidgetContenu/ContenuVideoWidget.dart';
+import 'Contenu/ContenuCoursViewModel.dart';
 
 class App extends StatefulWidget {
   @override
@@ -7,6 +10,7 @@ class App extends StatefulWidget {
 
 class _MyAppState extends State<App> {
   int _selectedIndex = 0;
+
 
   final List<Widget> _pages = [
     Center(child: Text('Page Home')),
@@ -22,6 +26,18 @@ class _MyAppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+
+    //TestVideo
+
+    ContenuVideoWidget video = ContenuVideoWidget();
+
+    video.fileLoader = ContenuCoursViewModel();
+
+    video.data = MediaCours(id : 1, idPage: 1, ordre: 1, url: 'lib/data/AppData/tes.mp4', type: 'video',);
+
+
+    //
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -40,7 +56,10 @@ class _MyAppState extends State<App> {
           ),
           centerTitle: true,
         ),
-        body: _pages[_selectedIndex],
+        body: Center(
+          child: video,
+          ),
+        //_pages[_selectedIndex],
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
