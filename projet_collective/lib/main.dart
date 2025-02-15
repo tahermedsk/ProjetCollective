@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seriouse_game/DataBase/database_helper.dart';
 import 'package:seriouse_game/ui/Contenu/ContenuCoursView.dart';
+import 'package:seriouse_game/ui/Home.dart';
+import 'package:seriouse_game/ui/Module.dart';
 import 'package:seriouse_game/ui/Cours.dart';
 import 'package:seriouse_game/ui/Description/DescriptionCoursView.dart';
 
@@ -15,40 +17,53 @@ void main() {
 }
 
 // Configuration des routes
-final GoRouter _router = GoRouter(
+final GoRouter appRouter = GoRouter(
   routes: <RouteBase>[
+    //route vers Home avec un nom
+    GoRoute(
+      path: '/home/:nom',
+      builder: (BuildContext context, GoRouterState state) {
+        final String homeName = state.pathParameters['nom']!;
+        return Home(nom: homeName);  //passage du nom à la page Home
+      },
+    ),
+    //route vers un module avec un nom
+    GoRoute(
+      path: '/module/:nom',
+      builder: (BuildContext context, GoRouterState state) {
+        final String moduleName = state.pathParameters['nom']!;
+        return Module(nom: moduleName);  //passage du nom à la page Module
+      },
+    ),
     GoRoute(
       path: '/cours/:id',
       builder: (BuildContext context, GoRouterState state) {
-        final String CoursId = state.pathParameters['id']!;  // Récupère l'ID  depuis l'URL
-        return  cours(CoursId: CoursId);
+        final String coursId = state.pathParameters['id']!;
+        return cours(CoursId: coursId);
       },
       routes: <RouteBase>[
-        // Sous-pages pour le cours
         GoRoute(
           path: 'contenu',
           builder: (BuildContext context, GoRouterState state) {
-            final String CoursId = state.pathParameters['id']!;  // Récupère l'ID de l'utilisateur depuis l'UR
-            return  ContenuCoursView(CoursId: CoursId);
-
+            final String coursId = state.pathParameters['id']!;
+            return ContenuCoursView(CoursId: coursId);
           },
         ),
         GoRoute(
           path: 'description',
           builder: (BuildContext context, GoRouterState state) {
-            final String CoursId = state.pathParameters['id']!;  // Récupère l'ID
-            return  DescriptionCoursView(CoursId: CoursId);
-
-          },
-        ),
-        //GoRoute(
-          //path: 'jeux',
-          //builder: (BuildContext context, GoRouterState state) {
-            //return ContenuCoursView();
-          //},
-        //),
-      ],
-    ),
+            final String coursId = state.pathParameters['id']!;
+            return DescriptionCoursView(CoursId: coursId);
+            },
+          ),
+          //GoRoute(
+            //path: 'jeux',
+            //builder: (BuildContext context, GoRouterState state) {
+              //return ContenuCoursView();
+            //},
+          //),
+        ],
+      ),
   ],
 );
 
@@ -62,7 +77,7 @@ class MyApp extends StatefulWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerConfig: _router,
+      routerConfig: appRouter,
     );
   }
 
