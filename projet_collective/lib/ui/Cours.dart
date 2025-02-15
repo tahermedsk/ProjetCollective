@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class cours extends StatelessWidget {
-  const cours({Key? key}) : super(key: key);
+  const cours({Key? key, required String CoursId}) : super(key: key);
+
+
 
   @override
   Widget build(BuildContext context) {
