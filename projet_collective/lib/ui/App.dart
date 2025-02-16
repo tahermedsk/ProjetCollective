@@ -33,7 +33,7 @@ class _MyAppState extends State<App> {
 
     video.fileLoader = ContenuCoursViewModel();
 
-    video.data = MediaCours(id : 1, idPage: 1, ordre: 1, url: 'lib/data/AppData/tes.mp4', type: 'video',);
+    video.data = MediaCours(id : 1, idPage: 1, ordre: 1, url: 'lib/data/AppData/test.mp4', type: 'video',);
 
 
     //
