@@ -44,4 +44,15 @@ class PageRepository {
       whereArgs: [id],
     );
   }
+
+  Future<List<Page>> getPagesByCourseId(int courseId) async {
+    final db = await _dbHelper.database;
+    final result = await db.query(
+      'page',
+      where: 'id_cours = ?',
+      whereArgs: [courseId],
+    );
+    return result.map((map) => Page.fromMap(map)).toList();
+  }
+
 }

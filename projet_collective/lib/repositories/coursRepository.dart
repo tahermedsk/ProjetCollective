@@ -55,4 +55,15 @@ class CoursRepository {
       whereArgs: [id],
     );
   }
+
+  Future<List<Cours>> getCoursesByModuleId(int moduleId) async {
+    final db = await _dbHelper.database;
+    final result = await db.query(
+      'Cours',
+      where: 'id_Module = ?',
+      whereArgs: [moduleId],
+    );
+    return result.map((map) => Cours.fromMap(map)).toList();
+  }
+
 }

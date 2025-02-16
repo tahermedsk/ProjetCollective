@@ -55,4 +55,16 @@ class MiniJeuRepository {
       whereArgs: [id],
     );
   }
+
+  Future<MiniJeu?> getMiniJeuByCoursId(int coursId) async {
+    final db = await _dbHelper.database;
+    final result = await db.query(
+      'MiniJeu',
+      where: 'id_cours = ?',
+      whereArgs: [coursId],
+    );
+
+    return result.isNotEmpty ? MiniJeu.fromMap(result.first) : null;
+  }
+
 }
