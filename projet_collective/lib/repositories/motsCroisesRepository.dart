@@ -55,4 +55,16 @@ class MotsCroisesRepository {
       whereArgs: [id],
     );
   }
+
+  Future<List<MotsCroises>> getMotsCroisesByMiniJeuId(int miniJeuId) async {
+    final db = await _dbHelper.database;
+    final result = await db.query(
+      'MotsCroises',
+      where: 'id_minijeu = ?',
+      whereArgs: [miniJeuId],
+    );
+
+    return result.map((map) => MotsCroises.fromMap(map)).toList();
+  }
+
 }

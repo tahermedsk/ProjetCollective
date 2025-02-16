@@ -55,4 +55,17 @@ class MotRepository {
       whereArgs: [id],
     );
   }
+
+
+  Future<List<Mot>> getMotsByMotsCroisesId(int motsCroisesId) async {
+    final db = await _dbHelper.database;
+    final result = await db.query(
+      'Mot',
+      where: 'id_motscroises = ?',
+      whereArgs: [motsCroisesId],
+    );
+
+    return result.map((map) => Mot.fromMap(map)).toList();
+  }
+
 }
