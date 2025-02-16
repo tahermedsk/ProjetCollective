@@ -9,8 +9,8 @@ import 'ui/App.dart';
 
 void main() {
   setupLocator();
-  runApp(App());
-  //runApp(MyApp());
+  //runApp(App());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {

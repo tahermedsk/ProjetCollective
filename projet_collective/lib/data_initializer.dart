@@ -103,6 +103,7 @@ Future<void> insertSampleData() async {
   final miniJeuId = await miniJeuRepository.create(miniJeu);
 
   print('Toutes les données d\'exemple ont été insérées avec succès.');
+  testRepositories();
 }
 
 Future<void> testRepositories() async {
@@ -229,6 +230,8 @@ Future<void> testRepositories() async {
   final cours = allCours.first;
   final fetchedCours = await coursRepository.getById(cours.id!);
   print('Cours récupérée par ID : ${fetchedCours?.titre}');
+
+  print("Nombre de page récupéré : ${fetchedCours?.pages?.length}");
 
   // Supprimer une cours
   await coursRepository.delete(cours.id!);
