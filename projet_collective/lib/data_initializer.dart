@@ -231,15 +231,16 @@ Future<void> testRepositories() async {
   final fetchedCours = await coursRepository.getById(cours.id!);
   print('Cours récupérée par ID : ${fetchedCours?.titre}');
 
-  // 
-  fetchedCours?.pages = await pageRepository.getPagesByCourseId(cours.id!);
-  print("Nombre de page récupéré : ${fetchedCours?.pages?.length}");
+  // méthode loadContenu(Cours cours)
+  cours.pages = await pageRepository.getPagesByCourseId(cours.id!);
+  print("Nombre de page récupéré : ${cours.pages?.length}");
 
-  // 
-  for (int i=0; i<fetchedCours!.pages!.length; i++) {
-    fetchedCours.pages![i].medias = await mediaCoursRepository.getByPageId(fetchedCours.pages![i].id!);
-    print(fetchedCours.pages![i].medias?.length);
-  }
+  for (int i=0; i<cours!.pages!.length; i++) {
+      cours.pages![i].medias = await mediaCoursRepository.getByPageId(cours.pages![i].id!);
+      print(cours.pages![i].medias?.length);
+    }
+  
+  
 
 
   // Supprimer une cours
