@@ -196,8 +196,8 @@ Future<void> testRepositories() async {
   print('Média récupéré par ID : ${fetchedMedia?.url}');
 
   // Supprimer un média
-  await mediaCoursRepository.delete(media.id!);
-  print('Média supprimé.');
+  //await mediaCoursRepository.delete(media.id!);
+  //print('Média supprimé.');
 
   // --- Test Page ---
   print('--- Test Page ---');
@@ -213,8 +213,8 @@ Future<void> testRepositories() async {
     print('Page récupérée par ID : ${fetchedPage?.id} liée au cours : ${fetchedPage?.idCours}');
 
     // Supprimer une page
-    await pageRepository.delete(page.id!);
-    print('Page supprimée.');
+    //await pageRepository.delete(page.id!);
+    //print('Page supprimée.');
   } else {
     print('Aucune page disponible pour le test.');
   }
@@ -231,7 +231,16 @@ Future<void> testRepositories() async {
   final fetchedCours = await coursRepository.getById(cours.id!);
   print('Cours récupérée par ID : ${fetchedCours?.titre}');
 
+  // 
+  fetchedCours?.pages = await pageRepository.getPagesByCourseId(cours.id!);
   print("Nombre de page récupéré : ${fetchedCours?.pages?.length}");
+
+  // 
+  for (int i=0; i<fetchedCours!.pages!.length; i++) {
+    fetchedCours.pages![i].medias = await mediaCoursRepository.getByPageId(fetchedCours.pages![i].id!);
+    print(fetchedCours.pages![i].medias?.length);
+  }
+
 
   // Supprimer une cours
   await coursRepository.delete(cours.id!);

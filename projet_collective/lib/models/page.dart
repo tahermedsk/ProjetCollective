@@ -1,8 +1,11 @@
+import 'package:seriouse_game/models/mediaCours.dart';
+
 class Page {
   int? id;
   int ordre;
   int idCours;
   String? description ;
+  List<MediaCours>? medias;
 
   Page({
     this.id,
