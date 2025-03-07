@@ -54,6 +54,7 @@ class DatabaseHelper {
        id INTEGER PRIMARY KEY AUTOINCREMENT,
        description TEXT ,
        ordre INTEGER NOT NULL,
+       est_vue INTEGER DEFAULT 0,
        id_cours INTEGER NOT NULL,
        FOREIGN KEY (id_cours) REFERENCES cours (id) ON DELETE CASCADE ON UPDATE CASCADE
       );
