@@ -1,3 +1,5 @@
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/services.dart';
 import 'package:seriouse_game/models/mediaCours.dart';
 import 'package:video_player/video_player.dart';
 import 'package:seriouse_game/repositories/mediaCoursRepository.dart';
@@ -32,11 +34,41 @@ class ContenuCoursViewModel {
         controller = VideoPlayerController.asset(mediaModel.url);
         
         
-      } on Exception catch (e) {
+      } on Exception {
         rethrow;
       }
 
       return controller ;
+
+  }
+
+  //Méthode permettant d'initialiser un lecteur audio avec l'url d'un fichier contenue dans un modèle.
+  Future<AudioPlayer> AudioLoader(MediaCours mediaModel) async {
+
+    //Teste si le modèle envoyée est bien un modèle prévu pour un fichier Audio. Sinon on renvoie une erreur.
+    if(mediaModel.type!="Audio"){
+      throw Exception("Wrong type of ressources");
+    }
+
+    //Création du lecteur audio
+    final player = AudioPlayer();
+    //Par défaut AudioPlayer cherche les fichiers audios dans le dossier assets.
+    //N'utilisant pas de dossier de ce non dans notre arborescence, nous supprimons le prefix assets de la recherche 
+    player.audioCache = AudioCache(prefix: '');
+
+    try {
+      //On tente de récupérer le fichier dans nos fichiers. Si une erreur est levée, c'est que le fichier n'existe pas (url incorrecte)
+      //Nous ne pouvons pas chercher directement si le fichier existe : les méthodes de Dart le permettant ne fonctionnent pas bien sous Android
+       await rootBundle.load(mediaModel.url);
+    } catch(_) {
+      rethrow;
+    }
+
+    //On attend que le lecteur initialise notre fichier comme sa source.
+    await player.setSource(AssetSource(mediaModel.url));
+  
+    //On retourne le lecteur audio
+    return player;
 
   }
 
