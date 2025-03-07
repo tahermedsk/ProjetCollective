@@ -8,38 +8,61 @@ import 'package:seriouse_game/ui/Contenu/ContenuCoursViewModel.dart';
 import 'package:video_player/video_player.dart';
 
  
+// ignore: must_be_immutable
 class ContenuVideoWidget extends StatelessWidget {
 
   late MediaCours data;
   late ContenuCoursViewModel fileLoader;
   late VideoPlayerController controller;
+  bool error = false;
 
   ContenuVideoWidget({super.key});
 
+  Future<bool> initController() async {
+
+    controller = VideoPlayerController.asset("");
+    try {
+      controller = await fileLoader.VideoLoader(data);
+    } catch(_) {
+      error = true;
+    }
+    return error;
+
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    try {
-      controller = fileLoader.VideoLoader(data);
-    } on Exception catch (e) {
-        return (
-          MaterialApp(
-            home: Text("Video can't be loaded : "+ e.toString() ),
-          )
-        );
-    }
   
-    
-    
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        return VideoPlayerScreen(controller: controller);
+    return FutureBuilder(
+          future: initController(),
+          builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+
+                if(!error){
+                  return LayoutBuilder(
+                  builder: (BuildContext context, BoxConstraints constraints) {
+                   return VideoPlayerScreen(controller: controller);
+                  });
+                }else {
+                  return const Scaffold(
+                    body: Center(
+                      child: 
+                      SizedBox(
+                        child: Text("Video file not found"),
+                      )
+                    )
+            
+                  );
+                }
+              }else{
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+                
       }
       
     );
-      
-    
-   ;
   }
 }
 
@@ -90,11 +113,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           
             try {
               videoLength = _controller.value.duration;
-            } on Exception catch (e) {
+            }catch (_) {
               errorLoadingVideo = true;
             }
           }));
-
 
       _controller.setLooping(true);
 
@@ -103,10 +125,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             errorLoadingVideo = _controller.value.hasError;
           }));
 
-    } on Exception catch (e) {
+    }catch (_) {
       errorLoadingVideo = true;
     }
-
   }
 
   @override
@@ -133,16 +154,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
           )
         );
     }else {
-
-      //if (DeviceOrientation.values == DeviceOrientation.landscapeLeft ||
-          //DeviceOrientation.values == DeviceOrientation.landscapeRight) {
-        //enterFullScreen();
-        //isFullscreen = true;
-      //} else {
-        //exitFullScreen();
-        //isFullscreen = false;
-      //}
-
 
       if (MediaQuery.of(context).orientation == Orientation.portrait) {
         exitFullScreen();
