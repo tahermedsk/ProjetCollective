@@ -54,7 +54,25 @@ class ContenuAudioWidget extends StatelessWidget {
                                 if (!error){
                                   return AudioPlayerScreen(player: player);
                                 }else{
-                                  return const Text("Audio file not found");
+                                  return Container(
+                                      //Gestion de l'espace entre le contenu et la bordure interieure du widget
+                                      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                                      //Gestion de l'espace entre l'exterieur du widget et les widgets adjacents
+                                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                                      //Décoration de la bordure
+                                      decoration: BoxDecoration(
+                                        //Gestion de l'angle de la bordure
+                                        borderRadius:BorderRadius.circular(15),
+                                        //Couleur interne et externe de la boite
+                                        color: Colors.white,
+                                        boxShadow: const [
+                                          BoxShadow(color: Colors.black, spreadRadius: 0.5),
+                                        ],
+                                      ),
+                                      
+                                      child:
+                                        const Text("Audio file not found")
+                                  );
                                 }
                               //Si jamais le lecteur n'est toujours pas chargée on affiche une progress bar    
                               }else{
@@ -143,7 +161,26 @@ class _AudioPlayerScreenState extends State<AudioPlayerScreen> {
                                 if (player.source == null) {
                                     //Permet d'afficher un message d'erreur si la source de l'audio (contenu du fichier audio initialisé) n'existe pas
                                     return 
-                                      const Text("An unexpected error has happened : audio player is null");
+                                      Container(
+                                      //Gestion de l'espace entre le contenu et la bordure interieure du widget
+                                      padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                                      //Gestion de l'espace entre l'exterieur du widget et les widgets adjacents
+                                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                                      //Décoration de la bordure
+                                      decoration: BoxDecoration(
+                                        //Gestion de l'angle de la bordure
+                                        borderRadius:BorderRadius.circular(15),
+                                        //Couleur interne et externe de la boite
+                                        color: Colors.white,
+                                        boxShadow: const [
+                                          BoxShadow(color: Colors.black, spreadRadius: 0.5),
+                                        ],
+                                      ),
+                                      
+                                      child:
+                                        const Text("An unexpected error has happened : audio player is null")
+                                      );
+
                                   }else {
                                     //Container pour afficher le widget sous la forme d'une boite arrondie
                                     return Container(

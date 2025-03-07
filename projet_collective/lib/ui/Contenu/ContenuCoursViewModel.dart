@@ -24,19 +24,23 @@ class ContenuCoursViewModel {
     }
   }
 
-  VideoPlayerController VideoLoader(MediaCours mediaModel){
+  Future<VideoPlayerController> VideoLoader(MediaCours mediaModel) async {
 
       late VideoPlayerController controller;
 
+      if(mediaModel.type!="Video"){
+        throw Exception("Wrong type of ressources");
+      }
+
       try {
         
-        
-        controller = VideoPlayerController.asset(mediaModel.url);
-        
-        
+        await rootBundle.load(mediaModel.url);
+                  
       } on Exception {
         rethrow;
       }
+
+      controller = VideoPlayerController.asset(mediaModel.url);
 
       return controller ;
 
