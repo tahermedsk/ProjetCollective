@@ -4,12 +4,14 @@ class Page {
   int? id;
   int ordre;
   int idCours;
+  int estVue;
   String? description ;
   List<MediaCours>? medias;
 
   Page({
     this.id,
     required this.ordre,
+    this.estVue=0,
     required this.idCours,
      this.description ,
   });
@@ -21,6 +23,7 @@ class Page {
       'ordre': ordre,
       'id_cours': idCours,
       'description':description,
+      'est_vue':estVue
     };
   }
 
@@ -30,7 +33,8 @@ class Page {
       id: map['id'],
       ordre: map['ordre'],
       idCours: map['id_cours'],
-      description: map['description']
+      description: map['description'],
+      estVue: map['est_vue']
     );
   }
 }
