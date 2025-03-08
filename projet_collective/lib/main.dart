@@ -1,119 +1,175 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:seriouse_game/DataBase/database_helper.dart';
-import 'package:seriouse_game/ui/Contenu/ContenuCoursView.dart';
-import 'package:seriouse_game/ui/Home.dart';
-import 'package:seriouse_game/ui/Module.dart';
-import 'package:seriouse_game/ui/Cours.dart';
-import 'package:seriouse_game/ui/Description/DescriptionCoursView.dart';
 
-import 'data_initializer.dart';
-
-import 'ui/App.dart';
 
 void main() {
-  runApp(App());
-  //runApp(MyApp());
+  runApp(const MainApp());
 }
 
-// Configuration des routes
-final GoRouter appRouter = GoRouter(
-  routes: <RouteBase>[
-    //route vers Home avec un nom
-    GoRoute(
-      path: '/home/:nom',
-      builder: (BuildContext context, GoRouterState state) {
-        final String homeName = state.pathParameters['nom']!;
-        return Home(nom: homeName);  //passage du nom à la page Home
-      },
-    ),
-    //route vers un module avec un nom
-    GoRoute(
-      path: '/module/:nom',
-      builder: (BuildContext context, GoRouterState state) {
-        final String moduleName = state.pathParameters['nom']!;
-        return Module(nom: moduleName);  //passage du nom à la page Module
-      },
-    ),
-    GoRoute(
-      path: '/cours/:id',
-      builder: (BuildContext context, GoRouterState state) {
-        final String coursId = state.pathParameters['id']!;
-        return cours(CoursId: coursId);
-      },
-      routes: <RouteBase>[
-        GoRoute(
-          path: 'contenu',
-          builder: (BuildContext context, GoRouterState state) {
-            final String coursId = state.pathParameters['id']!;
-            return ContenuCoursView(CoursId: coursId);
-          },
-        ),
-        GoRoute(
-          path: 'description',
-          builder: (BuildContext context, GoRouterState state) {
-            final String coursId = state.pathParameters['id']!;
-            return DescriptionCoursView(CoursId: coursId);
-            },
-          ),
-          //GoRoute(
-            //path: 'jeux',
-            //builder: (BuildContext context, GoRouterState state) {
-              //return ContenuCoursView();
-            //},
-          //),
-        ],
-      ),
-  ],
-);
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
-
-
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-
-  // Configuration des routes
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      routerConfig: appRouter,
+      routerConfig: router,
     );
   }
-
-
-  @override
-  State<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
 
-    // Insérer des données d'exemple après le lancement de l'UI
-    Future.delayed(Duration.zero, () async {
-      await insertSampleData();  // Appel de la fonction qui insère les données via les repositories
-      await testRepositories();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Home Page Content'),
+            const SizedBox(height: 15),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class BottomNavigationBarScaffold extends StatefulWidget {
+  const BottomNavigationBarScaffold({super.key, this.child});
+
+  final Widget? child;
+
+  @override
+  State<BottomNavigationBarScaffold> createState() => _BottomNavigationBarScaffoldState();
+}
+
+class _BottomNavigationBarScaffoldState extends State<BottomNavigationBarScaffold> {
+  int currentIndex = 0;
+
+  void changeTab(int index) {
+    switch (index) {
+      case 0:
+        context.go('/');
+        break;
+      case 1:
+        context.go('/modules');
+        break;
+      case 2:
+        context.go('/cours');
+        break;
+      default:
+        context.go('/');
+        break;
+    }
+    setState(() {
+      currentIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      home: Scaffold(
-        appBar: AppBar(
-
-          title: const Text("Courses List"),
-        ),
-        body: const Center(
-          child: Text("Hello"),
-        ),
-
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Header App'),
+      ),
+      body: widget.child,
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: changeTab,
+        backgroundColor: const Color(0xffe0b9f6),
+        currentIndex: currentIndex,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.folder), label: 'Modules'),
+          BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Cours'),
+        ],
       ),
     );
   }
 }
 
+class CoursView extends StatelessWidget {
+  const CoursView({super.key});
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Cours')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () => context.go('/cours/description'),
+              child: const Text('Aller à la Description'),
+            ),
+            ElevatedButton(
+              onPressed: () => context.go('/cours/contenu'),
+              child: const Text('Aller au Contenu'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class Description extends StatelessWidget {
+  const Description({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Description')),
+      body: const Center(child: Text('Page de Description')),
+    );
+  }
+}
+
+class Contenu extends StatelessWidget {
+  const Contenu({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Contenu')),
+      body: const Center(child: Text('Page de Contenu')),
+    );
+  }
+}
+
+class ModulesView extends StatelessWidget {
+  const ModulesView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Modules')),
+      body: const Center(child: Text('Page des Modules')),
+    );
+  }
+}
+
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
+
+final router = GoRouter(
+  navigatorKey: _rootNavigatorKey,
+  routes: [
+    ShellRoute(
+      navigatorKey: _shellNavigatorKey,
+      builder: (context, state, child) => BottomNavigationBarScaffold(child: child),
+      routes: [
+        GoRoute(path: '/', builder: (context, state) => const HomePage()),
+        GoRoute(path: '/modules', builder: (context, state) => const ModulesView()),
+        GoRoute(path: '/cours', builder: (context, state) => const CoursView()),
+        GoRoute(path: '/cours/description', builder: (context, state) => const Description()),
+        GoRoute(path: '/cours/contenu', builder: (context, state) => const Contenu()),
+      ],
+    ),
+  ],
+);
