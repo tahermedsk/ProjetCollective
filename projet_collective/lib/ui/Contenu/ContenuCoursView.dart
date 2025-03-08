@@ -3,7 +3,6 @@ import 'package:seriouse_game/models/cours.dart';
 import 'package:seriouse_game/ui/Contenu/WidgetContenu/ContenuImageWidget.dart';
 import 'package:seriouse_game/ui/Contenu/WidgetContenu/ContenuVideoWidget.dart';
 import 'package:seriouse_game/ui/Contenu/WidgetContenu/ContenuTextWidget.dart';
-import 'package:seriouse_game/ui/Contenu/ContenuCoursViewModel.dart';
 
 class ContenuCoursView extends StatelessWidget {
   final Cours cours;
@@ -22,10 +21,7 @@ class ContenuCoursView extends StatelessWidget {
             if (media.type == "image") {
               return ContenuImageWidget(media: media);
             } else if (media.type == "video") {
-              ContenuVideoWidget video = ContenuVideoWidget();
-              video.fileLoader = ContenuCoursViewModel();
-              video.data = media;
-              return video;
+              return ContenuVideoWidget(data: media);
             } else if (media.type == "text") {
               return ContenuTextWidget(filePath: media.url);
             } else {
