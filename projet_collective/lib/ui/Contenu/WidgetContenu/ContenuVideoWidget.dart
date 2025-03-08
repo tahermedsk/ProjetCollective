@@ -208,84 +208,23 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                         onTap: () =>
                           _controller.value.isPlaying ? _controller.pause() : _controller.play(),
                         child:
-                          //FutureBuilder permettant d'attendre la fin du chargement de la vidéo pour l'afficher
-                          FutureBuilder(
-                            future: _initializeVideoPlayerFuture,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.done) {
-                                //Affichage de la vidéo :          
-                                return AspectRatio(
-                                aspectRatio: _controller.value.aspectRatio,
-                                      
-                                child: VideoPlayer(_controller),
-                                );
-                              } else {
-                                //Affichage d'un écran de chargement si la vidéo n'est pas chargée.            
-                                return const Center(
-                                child: CircularProgressIndicator(),
-                                );
-                              }
-                            },
-                          ),
+                          //Widget d'affichage de la vidéo
+                          videoScreen()
                       ),        
                         
-                        //Barre de progression indiquant la position dans la vidép (cf barre rouge de youtube)
-                        Slider(
-                            //Variable indiquant la valeur actuelle de la progression (position dans la vidéo)
-                            value: videoPosition.inSeconds.toDouble(),
-                            min: 0,
-                            //La valeur maximale de cette barre est la durée de la vidéo
-                            max: videoLength.inSeconds.toDouble(),
-                            thumbColor: const Color.fromARGB(255, 246, 1, 1),
-                            activeColor: const Color.fromARGB(255, 246, 1, 1),
-                            //Code appliqué lorsque l'utilisateur appuie et change la valeur de la barre :   
-                            onChanged: (_videoPosition) => setState(() {
-                                                //Code permettant de déplacer la position de la vidéo à celle de la barre :
-                                                videoPosition = Duration.zero + Duration(seconds: _videoPosition.toInt());
-                                                _controller.seekTo(videoPosition);
-                                              
-                                              }
-                            ),
-                        ),
+                        //Barre de progression indiquant la position dans la vidéo (cf barre rouge de youtube)
+                        progressBarVideo(),
                   Row(               
                     children : <Widget>[
                             //Bouton Lecture/Pause : 
-                            IconButton(
-                              //Icone change en fonction de si la vidéo est en pause ou non :
-                              icon: Icon(_controller.value.isPlaying
-                                  ? Icons.pause
-                                  : Icons.play_arrow),
-                              //Si le lecteur joue la vidéo, on la met en pause, sinon on la joue.
-                              //On met également HasVideoNotStarted à false si on joue la vidéo
-                              onPressed: () {
-                                setState(() {
-                                  _controller.value.isPlaying
-                                      ? _controller.pause()
-                                      : {_controller.play(), HasVideoNotStarted = false};
-                                });
-                              },
-                            ),
+                            playButton(Colors.black),
 
                             //Affichage icône pour le volume sonore.
                             //animatedVolumeIcon est une fonction renvoyant une icône differente en fonction du niveau sonore.
                             Icon(animatedVolumeIcon(volume)),
 
                             //Barre gérant le volume sonore
-                            SizedBox(
-                                width: 100,
-                                child: Slider(
-                                  value: volume,
-                                  min: 0,
-                                  max: 1,
-                                  //Code changeant le volume quand la barre est manipulée par l'utilisateur :
-                                  onChanged: (_volume) => setState(() {
-                                    volume = _volume;
-                                    _controller.setVolume(_volume);
-                                  
-                                  }
-                                  ),
-                                ),
-                            ),
+                            volumeSlider(),
         
                             //Créer un espace entre les boutons de l'interface
                             const Spacer(),
@@ -299,33 +238,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                             const Spacer(),
 
                             //Bouton permettant de revenir au début de la lecture de la vidéo
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                    //On change la position de la vidéo à 0.
-                                    _controller.seekTo(Duration.zero);
-                                });
-                              }, 
-                              icon: const Icon(
-                                Icons.restart_alt_rounded,
-                              ),
-                            ),
+                            returnToStart(Colors.black),
         
                             
                             //Bouton permettant de passer en mode plein écran
-                            IconButton(
-                              onPressed: () {
-                                //On teste si on est en plein écran ou non
-                                //Si oui, on passe isFullscreen à false, on change l'orientation de l'appli en portrait, et on rétablit ensuite toutes les rotations (les rotations sont bloquées en fullscreen)
-                                //Si non, on passe isFullscreen à true et on passe en paysage. On active également le timer startTimerWidgetFullscreen pour que l'interface soit visible 3 secondes après le changement d'orientation.
-                                  isFullscreen 
-                                  ? {isFullscreen = false, exitFullScreen(), SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),enableRotation()}
-                                  : {isFullscreen = true, enterFullScreen(), SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]),startTimerWidgetFullscreen()};
-                              }, 
-                              icon: const Icon(
-                                Icons.fullscreen,
-                              ),
-                            )
+                            fullscreenButton(Colors.black)
                           ],
                       ),
                 ],
@@ -336,7 +253,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             
             );
       }else{
+        //On apelle la méthode pour entrer en fullscreen si l'orientation paysage est détectée
         enterFullScreen();
+        //On indique que l'on est en plein écran
         isFullscreen = true;
         return (
           Scaffold(
@@ -344,54 +263,49 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
               child: 
               LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) { 
+                    //Stack va nous permettre d'avoir une interface flottante par dessus la vidéo (pour nos boutons)
+                    //Cette interface ne sera affichée que temporairement après un appui de l'utilisateur
                     return Stack(
                             children: <Widget>[
                               SizedBox(
+                                //Force la vidéo à prendre la taille maximul allouée par le widget parent si cette taille n'est pas inférieure à la taille miniumum du controleur
                                 height: constraints.maxHeight,
                                 width: constraints.maxWidth,
                                 child : 
-                          
+                                  //Permet de detecter que l'utilisateur appuie sur l'écran
                                   GestureDetector(
-                                  behavior: HitTestBehavior.opaque,
-                                  onTap: () => {
-                                  fullscreenWidgetButtons ? fullscreenWidgetButtons = false : startTimerWidgetFullscreen(),
-                                  },
-                                  child:
-                              
-                                    FutureBuilder(
-                                        future: _initializeVideoPlayerFuture,
-                                        builder: (context, snapshot) {
-                                          if (snapshot.connectionState == ConnectionState.done) {
-                                                      
-                                            return AspectRatio(
-                                            aspectRatio: _controller.value.aspectRatio,
-                                                  
-                                            child: VideoPlayer(_controller),
-                                            );
-                                          } else {
-                                                        
-                                            return const Center(
-                                            child: CircularProgressIndicator(),
-                                            );
-                                          }
-                                        },
-                                      ),                    
+                                    behavior: HitTestBehavior.opaque,
+                                    //Si l'interface est déja affichée , on la cache, sinon on lance le timer et leur affichage
+                                    onTap: () => {
+                                      fullscreenWidgetButtons ? fullscreenWidgetButtons = false : startTimerWidgetFullscreen(),
+                                    },
+                                    child:
+                                      //On affiche la vidéo
+                                      videoScreen() 
                                   ), 
                                                 
                              
                               ),
+                              //Widget visible seulement sous certaines conditions.
+                              //Il représente l'interface sur la vidéo (similaire à ytb : boutons, bar de progression, ect...)
                               Visibility(
                                 maintainSize: true, 
                                 maintainAnimation: true,
                                 maintainState: true,
+                                //Le widget n'est visible que si les boutons sont activés (fullscreenWidgetButton) par un appui utilisateur
+                                //On a cependant ajouté une condition supplémentaire : si la vidéo n'est pas encore lancée l'interface est visible
+                                //Cette condition est nécessaire car tant qu'elle ne sera pas lancé, le GestureDetector contenant le lecteur ne fonctionne pas
+                                //Cela est du au contrôleur de la vidéo controller.
+                                //Il s'agit de la seule utilité de la variable HasVideoNotStarted
                                 visible: fullscreenWidgetButtons || HasVideoNotStarted,
                                 child:
 
                                   Column(
                                     children: [
 
-                                      Spacer(),
+                                      const Spacer(),
 
+                                      //Bouton Play/Pause au centre de l'écran. 
                                       Align(
                                         alignment: Alignment.center,
                                         child: SizedBox(
@@ -419,113 +333,54 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                                         ),
                                       ),
 
-                                      Spacer(),
-
+                                      const Spacer(),
+                                      
+                                      //Interface en bas de l'écran. Elle est similaire à celle en mode portrait
                                       Align(
                                         alignment: Alignment.bottomCenter,
                                           child : SizedBox(
-                                          width: constraints.maxWidth,
-                                          height : 110,
-                                          child: 
-                                            Column(
-                                                children: [
-                                                  Slider(
-                                                      value: videoPosition.inSeconds.toDouble(),
-                                                      min: 0,
-                                                      max: videoLength.inSeconds.toDouble(),
-                                                      thumbColor: const Color.fromARGB(255, 246, 1, 1),
-                                                      activeColor: const Color.fromARGB(255, 246, 1, 1),  
-                                                      onChanged: (_videoPosition) => setState(() {
-                                                                          videoPosition = Duration.zero + Duration(seconds: _videoPosition.toInt());
-                                                                          _controller.seekTo(videoPosition);
+                                            //Les ratios utilisés ici sont fait pour tenir dans l'écran avec le header et le footer de l'app
+                                            width: constraints.maxWidth,
+                                            height : 110,
+                                            child: 
+                                              Column(
+                                                  children: [
+                                                    //Bar de progression style ytb
+                                                    progressBarVideo(),
+                                                    Row(
+                                                      
+                                                      children : <Widget>[
+                                                          //Bouton play/Pause
+                                                          playButton(Colors.white),
+
+                                                          //Volume              
+                                                          Icon(animatedVolumeIcon(volume),
+                                                                color: Colors.white),
                                                                         
-                                                                        }
-                                                      ),
-                                                  ),
-                                                  Row(
-                                                    
-                                                    children : <Widget>[
-                                                        IconButton(
-                                                          icon: Icon(_controller.value.isPlaying
-                                                              ? Icons.pause
-                                                              : Icons.play_arrow,
-                                                              color: Colors.white,
-                                                              size: 20,
+                                                          volumeSlider(),
+                                                                        
+                                                          const Spacer(),
+                                                          
+                                                          //Affichage position de la vidéo/durée totale de la vidéo
+                                                          Text(
+                                                            '${convertToMinutesSeconds(videoPosition)} / ${convertToMinutesSeconds(videoLength)}',
+                                                              style : const TextStyle(
+                                                                  fontSize: 15.0,
+                                                                  color: Colors.white,
+                                                                ),
                                                               ),
-                                                              
-                                                          onPressed: () {
-                                                            setState(() {
-                                                              _controller.value.isPlaying
-                                                                  ? _controller.pause()
-                                                                  : {_controller.play(), HasVideoNotStarted = false};
-                                                            }
-                                                            
-                                                            );
-                                                            startTimerWidgetFullscreen();
-                                                          },
-                                                        ),
-                                                                      
-                                                        Icon(animatedVolumeIcon(volume),
-                                                              color: Colors.white),
-                                                                      
-                                                        SizedBox(
-                                                            width: 100,
-                                                            child: Slider(
-                                                              value: volume,
-                                                              min: 0,
-                                                              max: 1,
-                                                              onChanged: (_volume) => setState(() {
-                                                                volume = _volume;
-                                                                _controller.setVolume(_volume);
-                                                              
-                                                              }
-                                                              ),
-                                                            ),
-                                                        ),
-                                                                      
-                                                        Spacer(),
-                                                        
-                                                        Text(
-                                                          '${convertToMinutesSeconds(videoPosition)} / ${convertToMinutesSeconds(videoLength)}',
-                                                            style : const TextStyle(
-                                                                fontSize: 15.0,
-                                                                color: Colors.white,
-                                                              ),
-                                                            ),
-                                      
-                                                        Spacer(),
-                                                                      
-                                                        IconButton(
-                                                          onPressed: () {
-                                                            setState(() {
-                                                                _controller.seekTo(Duration.zero);
-                                                            });
-                                                          }, 
-                                                          icon: const Icon(
-                                                            Icons.restart_alt_rounded,
-                                                            color: Colors.white,
-                                                            size: 20,
-                                                          ),
-                                                        ),
-                                                                      
-                                                        
-                                                                      
-                                                        IconButton(
-                                                          onPressed: () {
-                                                              isFullscreen 
-                                                              ? {isFullscreen = false, exitFullScreen(), SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),enableRotation()}
-                                                              : {isFullscreen = true, enterFullScreen(), SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight])};
-                                                          }, 
-                                                          icon: const Icon(
-                                                            Icons.fullscreen,
-                                                            color: Colors.white,
-                                                            size: 20,
-                                                          ),
-                                                        )
-                                                      ],
-                                                  ),
-                                                ],
-                                            ),
+                                        
+                                                          const Spacer(),
+
+                                                          //Bouton restart              
+                                                          returnToStart(Colors.white),
+
+                                                          //Bouton de gestion passage entre portrait et plein écran                               
+                                                          fullscreenButton(Colors.white)
+                                                        ],
+                                                    ),
+                                                  ],
+                                              ),
                                           ),
                                         ),
                                     ],
@@ -541,6 +396,130 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         );
       }
   }}
+
+  //Bouto permettant de changer entre plein ecran(paysage) et portrait
+  IconButton fullscreenButton(Color color){
+      return IconButton(
+                              onPressed: () {
+                                //On teste si on est en plein écran ou non
+                                //Si oui, on passe isFullscreen à false, on change l'orientation de l'appli en portrait, et on rétablit ensuite toutes les rotations (les rotations sont bloquées en fullscreen)
+                                //Si non, on passe isFullscreen à true et on passe en paysage. On active également le timer startTimerWidgetFullscreen pour que l'interface soit visible 3 secondes après le changement d'orientation.
+                                  isFullscreen 
+                                  ? {isFullscreen = false, exitFullScreen(), SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),enableRotation()}
+                                  : {isFullscreen = true, enterFullScreen(), SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft,DeviceOrientation.landscapeRight]),startTimerWidgetFullscreen()};
+                              }, 
+                              icon: Icon(
+                                Icons.fullscreen,
+                                color: color,
+                                size: 20,
+                              ),
+                            );
+  }
+
+  //Bouton permettant de revenir au début de la lecture de la vidéo
+  IconButton returnToStart(Color color){
+    return IconButton(
+      //On change la position du lecteur vidéo à 0.
+      onPressed: () {
+        setState(() {
+          _controller.seekTo(Duration.zero);
+        });
+      }, 
+      icon: Icon(
+        Icons.restart_alt_rounded,
+        color: color,
+        size: 20,
+      ),
+    );
+  }
+  //Barre gérant le volume sonore
+  SizedBox volumeSlider(){
+     
+    return  SizedBox(
+               width: 100,
+               child: Slider(
+                  value: volume,
+                  min: 0,
+                  max: 1,
+                  //Code changeant le volume quand la barre est manipulée par l'utilisateur :
+                  onChanged: (_volume) => setState(() {
+                    volume = _volume;
+                    _controller.setVolume(_volume);
+                                  
+                  }
+                ),
+              ),
+          );
+  }
+  //Bouton Lecture/Pause : 
+  IconButton playButton(Color color){
+    return 
+      IconButton(
+      //Icone change en fonction de si la vidéo est en pause ou non :
+        icon: Icon(_controller.value.isPlaying
+        ? Icons.pause
+        : Icons.play_arrow,
+        size: 20,
+        color: color,),
+        
+        //Si le lecteur joue la vidéo, on la met en pause, sinon on la joue.
+        //On met également HasVideoNotStarted à false si on joue la vidéo
+        onPressed: () {
+          setState(() {
+            _controller.value.isPlaying
+            ? _controller.pause()
+            : {_controller.play(), HasVideoNotStarted = false};
+          });
+          if(isFullscreen){
+            startTimerWidgetFullscreen();
+          }
+        },
+      );
+  }
+
+  //Barre de progression indiquant la position dans la vidéo (cf barre rouge de youtube)
+  Slider progressBarVideo(){
+    return Slider(
+      //Variable indiquant la valeur actuelle de la progression (position dans la vidéo)
+      value: videoPosition.inSeconds.toDouble(),
+      min: 0,
+      //La valeur maximale de cette barre est la durée de la vidéo
+      max: videoLength.inSeconds.toDouble(),
+
+      thumbColor: const Color.fromARGB(255, 246, 1, 1),
+      activeColor: const Color.fromARGB(255, 246, 1, 1),
+
+      //Code appliqué lorsque l'utilisateur appuie et change la valeur de la barre :   
+      onChanged: (_videoPosition) => setState(() {
+        //Code permettant de déplacer la position de la vidéo à celle de la barre :
+        videoPosition = Duration.zero + Duration(seconds: _videoPosition.toInt());
+        _controller.seekTo(videoPosition);
+                                              
+        }
+      ),
+    );
+  }
+  //FutureBuilder permettant d'attendre la fin du chargement de la vidéo pour l'afficher
+  FutureBuilder videoScreen(){
+    return FutureBuilder(
+      future: _initializeVideoPlayerFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          //Affichage de la vidéo :          
+          return AspectRatio(
+            aspectRatio: _controller.value.aspectRatio,
+                                        
+            child: VideoPlayer(_controller),
+          );
+        } else {
+        //Affichage d'un écran de chargement si la vidéo n'est pas chargée.            
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
+  }
 
     
 }
