@@ -28,7 +28,7 @@ class ContenuCoursViewModel {
 
       late VideoPlayerController controller;
 
-      if(mediaModel.type!="Video"){
+      if(mediaModel.type!="video"){
         throw Exception("Wrong type of ressources");
       }
 
