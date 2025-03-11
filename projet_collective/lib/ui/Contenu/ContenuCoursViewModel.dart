@@ -24,14 +24,18 @@ class ContenuCoursViewModel {
     }
   }
 
+  //Méthode permettant d'initialiser un lecteur vidéo avec l'url d'un fichier contenue dans mediaModel (MediaCours)
   Future<VideoPlayerController> VideoLoader(MediaCours mediaModel) async {
 
+      //On initialise le controller à renvoyer
       late VideoPlayerController controller;
 
-      if(mediaModel.type!="Video"){
+      //On teste si le type de média est bien celui voulu
+      if(mediaModel.type!="video"){
         throw Exception("Wrong type of ressources");
       }
 
+      //On vérifie si le fichier vidéo correspondant à l'url de mediaModel existe
       try {
         
         await rootBundle.load(mediaModel.url);
@@ -40,6 +44,7 @@ class ContenuCoursViewModel {
         rethrow;
       }
 
+      //On initialise et retourne le controller vidéo
       controller = VideoPlayerController.asset(mediaModel.url);
 
       return controller ;
@@ -50,7 +55,7 @@ class ContenuCoursViewModel {
   Future<AudioPlayer> AudioLoader(MediaCours mediaModel) async {
 
     //Teste si le modèle envoyée est bien un modèle prévu pour un fichier Audio. Sinon on renvoie une erreur.
-    if(mediaModel.type!="Audio"){
+    if(mediaModel.type!="audio"){
       throw Exception("Wrong type of ressources");
     }
 
