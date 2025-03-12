@@ -34,6 +34,7 @@ class CoursViewModel extends ChangeNotifier{
 
   void changementPageSuivante() {
     page++;
+    // #TODO : Indiquer que la page a été vu dans la bdd
     notifyListeners();
   }
 

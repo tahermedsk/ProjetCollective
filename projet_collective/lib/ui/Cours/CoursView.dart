@@ -20,7 +20,7 @@ class CoursView extends StatelessWidget {
 
   Widget? child;
   
-  final coursViewModel = CoursViewModel(); // #TODO : A tester
+  final coursViewModel = CoursViewModel();
 
   Future<void> changePage() async {
     CoursSelectionne coursSelectionne = CoursSelectionne.instance;
@@ -30,7 +30,7 @@ class CoursView extends StatelessWidget {
 
     Widget nouvellePage = const Text("PB lors du chargement de la page de cours");
     if (page==0) {
-      nouvellePage = const DescriptionView();
+      nouvellePage = DescriptionView(cours: coursSelectionne.cours, coursViewModel: coursViewModel);
       //print("Chargement de description");
     } else if (page<=nbPageCours) {
 
@@ -60,15 +60,17 @@ class CoursView extends StatelessWidget {
                       appBar: AppBar(
                         backgroundColor: Colors.white,
                         elevation: 2,
-                        title: HeaderWidget(),
+                        title: HeaderWidget(cours: CoursSelectionne.instance.cours, coursViewModel: coursViewModel),
                         centerTitle: false,
                       ),
                       body: child,
-                      bottomNavigationBar: FooterWidget(
-                        courseTitle: "Cours 1",
-                        pageNumber: 1,
-                        coursViewModel: coursViewModel,
-                      ), 
+                                            // La page de description n'a pas besoin du footer : Il change la page vu grâce à un bouton
+                      bottomNavigationBar: child.runtimeType == DescriptionView ? null : 
+                                            FooterWidget(
+                                              courseTitle: "Cours 1",
+                                              pageNumber: 1,
+                                              coursViewModel: coursViewModel,
+                                            ), 
                     );
               }
             );
@@ -79,14 +81,23 @@ class CoursView extends StatelessWidget {
 }
 
 class HeaderWidget extends StatelessWidget {
+  final Cours cours;
+  final CoursViewModel coursViewModel;
+
+  const HeaderWidget({
+    Key? key,
+    required this.cours,
+    required this.coursViewModel,
+  });
+
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
         const SizedBox(width: 8),
         // Titre
         Text(
-          'Cours 1',
+          cours.titre,
           style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -94,9 +105,7 @@ class HeaderWidget extends StatelessWidget {
           ),
         ),
         // Barre de progression
-        Expanded(
-          flex: 2,
-          child: ClipRRect(
+         ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: 0.5, // Progression à 50%
@@ -105,7 +114,7 @@ class HeaderWidget extends StatelessWidget {
               backgroundColor: Colors.teal.withOpacity(0.2),
             ),
           ),
-        ),
+        
       ],
     );
   }
