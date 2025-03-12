@@ -18,6 +18,8 @@ import 'models/mediaCours.dart';
 import 'models/objectifCours.dart';
 import 'models/page.dart';
 
+import 'package:seriouse_game/ui/CoursSelectionne.dart';
+
 Future<void> insertSampleData() async {
   await DatabaseHelper.instance.resetDatabase();
 
@@ -60,17 +62,35 @@ Future<void> insertSampleData() async {
 
 
   // Création d'une Page liée au cours
-  final page = Page(idCours: coursId, ordre: 1,description: "page 1");
-  final pageId = await pageRepository.create(page);
+  Page page = Page(idCours: coursId, ordre: 1,description: "page 1");
+  int pageId = await pageRepository.create(page);
 
-// Insertion de MediaCours lié à cette page
-  final mediaCours = MediaCours(
+  MediaCours mediaCours = MediaCours(
       idPage: pageId,
       ordre: 1,
-      url: 'https://media.example.com/video.mp4',
-      type: 'video',
-      caption: 'Vidéo explicative');
+      url: 'lib/data/AppData/goals.png',
+      type: 'image',
+      caption: 'logo flutter');
   await mediaCoursRepository.create(mediaCours);
+
+
+  // Création d'une Page liée au cours
+  page = Page(idCours: coursId, ordre: 2,description: "page 2");
+  pageId = await pageRepository.create(page);
+
+// Insertion de MediaCours lié à cette page
+  mediaCours = MediaCours(
+      idPage: pageId,
+      ordre: 1,
+      url: 'lib/data/AppData/facto-logo.png',
+      type: 'image',
+      caption: 'logo flutter 2');
+  await mediaCoursRepository.create(mediaCours);
+
+  // Init du singleton CoursSelectionne
+  CoursSelectionne coursSelectionne = CoursSelectionne.instance;
+  List<Cours> lstCours = await coursRepository.getAll();
+  coursSelectionne.setCours(lstCours[0]);
 
   // Création de Mots (Mots pour le MotsCroises)
   final mot1 = Mot(
@@ -103,7 +123,7 @@ Future<void> insertSampleData() async {
   final miniJeuId = await miniJeuRepository.create(miniJeu);
 
   print('Toutes les données d\'exemple ont été insérées avec succès.');
-  testRepositories();
+  //testRepositories();
 }
 
 Future<void> testRepositories() async {

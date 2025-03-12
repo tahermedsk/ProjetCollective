@@ -19,6 +19,7 @@ class ContenuCoursView extends StatelessWidget {
   Widget build(BuildContext context) {
     // Vérifier que l'index est valide
     if (cours.pages == null || selectedPageIndex < 0 || selectedPageIndex >= cours.pages!.length) {
+      print("Page introuvable");
       return const Center(child: Text("Page introuvable"));
     }
 
@@ -28,6 +29,8 @@ class ContenuCoursView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: page.medias?.map((media) {
+          print("Media url: ${media.url}");
+
           if (media.type == "image") {
             return ContenuImageWidget(media: media);
           } else if (media.type == "video") {
