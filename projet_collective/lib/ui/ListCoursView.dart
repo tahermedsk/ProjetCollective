@@ -10,9 +10,9 @@ import 'ModuleSelectionne.dart';
 class ListCoursView extends StatefulWidget {
 
   ListCoursViewModel listCours = ListCoursViewModel();
-  late ModuleSelectionne moduleSelectionne;
+  ModuleSelectionne moduleSelectionne = ModuleSelectionne();
 
-  ListCoursView({super.key, required this.moduleSelectionne});
+  ListCoursView({super.key});
 
   @override
   State<ListCoursView> createState() => ListCoursViewState(listCours,moduleSelectionne);
@@ -168,5 +168,4 @@ class ListCoursViewState extends State<ListCoursView>{
       child : Text(cours.titre),
     );
   }
-  
 }

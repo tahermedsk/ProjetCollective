@@ -9,21 +9,6 @@ import 'package:seriouse_game/models/cours.dart';
 class ContenuCoursViewModel {
   ContenuCoursViewModel();
 
-  final pageRepository = PageRepository();
-  final mediaCoursRepository = MediaCoursRepository();
-
-   Future<void> loadContenu(Cours cours) async {
-    // Récupération des pages associées au cours
-    cours.pages = await pageRepository.getPagesByCourseId(cours.id!);
-    print("Nombre de pages récupérées : \${cours.pages?.length}");
-
-    // Parcours des pages pour récupérer les médias associés
-    for (var page in cours.pages ?? []) {
-      page.medias = await mediaCoursRepository.getByPageId(page.id!);
-      print("Nombre de médias pour la page \${page.id} : \${page.medias?.length}");
-    }
-  }
-
   //Méthode permettant d'initialiser un lecteur vidéo avec l'url d'un fichier contenue dans mediaModel (MediaCours)
   Future<VideoPlayerController> VideoLoader(MediaCours mediaModel) async {
 

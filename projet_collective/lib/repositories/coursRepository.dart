@@ -28,7 +28,6 @@ class CoursRepository {
       where: 'id = ?',
       whereArgs: [id],
     );
-
     if (maps.isNotEmpty) {
       return Cours.fromMap(maps.first);
     }

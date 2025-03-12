@@ -9,9 +9,23 @@ import 'ui/App.dart';
 
 void main() {
   setupLocator();
-  //runApp(App());
-  runApp(MyApp());
+  runApp(const MainApp());
+  //runApp(MyApp());
 }
+
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
+
+  @override
+  Widget build(BuildContext context) { 
+    insertSampleData();
+    return MaterialApp.router( // Voir App.dart pour avoir le routeur et le 1er widget de l'app
+      //debugShowCheckedModeBanner: false,
+      routerConfig: router,
+    );
+  }
+}
+
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
