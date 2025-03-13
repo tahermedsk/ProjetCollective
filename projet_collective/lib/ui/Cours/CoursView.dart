@@ -47,7 +47,7 @@ class CoursView extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return ListenableBuilder(
-          listenable: coursViewModel,
+          listenable: coursViewModel, // On écoute le changement de page du ViewModel
           builder: (context, _) {
             // Le futur Builder sert à attendre l'exécution de la méthode changePage() avant de build :
             // Sans, la page à afficher (ie this.child) est récupéré après le build : 

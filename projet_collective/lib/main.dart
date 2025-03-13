@@ -18,10 +18,22 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) { 
-    insertSampleData();
-    return MaterialApp.router( // Voir App.dart pour avoir le routeur et le 1er widget de l'app
-      //debugShowCheckedModeBanner: false,
-      routerConfig: router,
+    // FutureBuilder permet d'attendre que les données d'exemple soient insérés avant le lancement de l'UI
+    // #TODO : Tester en ouvrant plusieurs fois l'application (Plusieurs insertions de données ?)
+    return FutureBuilder<void>(
+              future: insertSampleData(), // Récupération de la bonne View à charger selon la page visitée du cours sélectionné
+              builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                        case ConnectionState.done:
+                          return MaterialApp.router( // Voir App.dart pour avoir le routeur et le 1er widget de l'app
+                                //debugShowCheckedModeBanner: false,
+                                routerConfig: router,
+                              );
+                        default:
+                          return CircularProgressIndicator();
+                    }
+                    
+              }
     );
   }
 }
