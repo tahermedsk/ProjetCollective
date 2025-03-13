@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:seriouse_game/models/ListCoursViewModel.dart';
 import 'package:seriouse_game/ui/Cours/CoursView.dart';
 import 'package:seriouse_game/ui/Cours/CoursViewModel.dart';
+import 'package:seriouse_game/ui/CoursSelectionne.dart';
 
 import '../models/cours.dart';
 import '../models/module.dart';
@@ -63,7 +64,7 @@ class ListCoursViewState extends State<ListCoursView>{
             	  children: [
 
                   //Appel du widget affichant le titre
-            	    titleWidget(module),
+            	    moduleHeader(module),
 
                   //Affiche description et objectif du module en gras à gauche
                   Align(
@@ -72,16 +73,18 @@ class ListCoursViewState extends State<ListCoursView>{
                       Container(
                           margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                           child: 
-                            const Text(
-                              "Description et Objectif du Module",
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                                textAlign: TextAlign.left,
+                            
+                              const Text(
+                                "Description et Objectif du Module",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
                               
-                            ),
+                              ),
                       ),
                   ),
 
@@ -137,8 +140,11 @@ class ListCoursViewState extends State<ListCoursView>{
       );
     }
 
-  //Widget correspondant au titre du module
-  SizedBox titleWidget(Module module){
+  
+}
+
+//Widget correspondant au titre du module
+  SizedBox moduleHeader(Module module){
     //Valeur de la progression entre 0 et 1
     double progress = 0.5;
     return SizedBox(
@@ -179,10 +185,11 @@ class ListCoursViewState extends State<ListCoursView>{
                     margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                     child: Text(module.titre,
                       style: const TextStyle(
-                        fontSize: 30,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
+                      overflow: TextOverflow.clip,
                     ),
                   ),
                 
@@ -234,10 +241,10 @@ class ListCoursViewState extends State<ListCoursView>{
         //Méthode pour se aller au cours
         onTap: (){
 
+          CoursSelectionne.instance.cours = cours;
 
         }
   
       ),
     );
   }
-}
