@@ -29,7 +29,8 @@ class MainApp extends StatelessWidget {
                                 //debugShowCheckedModeBanner: false,
                                 routerConfig: router,
                               );
-                        default:
+
+                        default: // L'insertion n'a pas fini : Page d'attente #TODO 
                           return CircularProgressIndicator();
                     }
                     

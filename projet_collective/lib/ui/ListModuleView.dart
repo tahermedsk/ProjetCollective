@@ -116,7 +116,7 @@ SizedBox listModuleItem(Module item, BuildContext context) {
         onTap: (){
 
           ModuleSelectionne.instance.moduleSelectionne = item;
-          GoRouter.of(context).go('/cours');
+          GoRouter.of(context).go('/module');
         }
       ),
     );
