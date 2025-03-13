@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:seriouse_game/ui/Cours/CoursViewModel.dart';
 import 'package:seriouse_game/ui/Description/DescriptionView.dart';
 import 'package:seriouse_game/ui/Contenu/ContenuCoursView.dart';
+import 'package:seriouse_game/ui/QCM/JeuQCMView.dart';
+
 
 import 'package:seriouse_game/ui/CoursSelectionne.dart';
 import 'package:seriouse_game/models/cours.dart';
@@ -38,6 +40,7 @@ class CoursView extends StatelessWidget {
       //print("Chargement de contenu");
     } else {
       // Page jeu 
+      nouvellePage = JeuQCMView(idQCM: 1);
     }
 
     child = nouvellePage;

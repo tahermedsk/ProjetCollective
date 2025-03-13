@@ -24,7 +24,7 @@ class MainApp extends StatelessWidget {
               future: insertSampleData(), // Récupération de la bonne View à charger selon la page visitée du cours sélectionné
               builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
-                        case ConnectionState.done:
+                        case ConnectionState.done: // L'insertion est fini : 
                           return MaterialApp.router( // Voir App.dart pour avoir le routeur et le 1er widget de l'app
                                 //debugShowCheckedModeBanner: false,
                                 routerConfig: router,
