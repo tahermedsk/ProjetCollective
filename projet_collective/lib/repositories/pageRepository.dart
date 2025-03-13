@@ -73,4 +73,15 @@ Future<int> getNbPageByCourseId(int courseId) async {
     return Sqflite.firstIntValue(result) ?? 0;
   }
 
+  Future<int> setPageVisite(int pageId) async {
+    final db = await _dbHelper.database;
+    print("Page $pageId visité");
+    return await db.update(
+      'page',
+      {'est_vue' : true},
+      where: 'id = ?',
+      whereArgs: [pageId],
+    );
+  }
+
 }

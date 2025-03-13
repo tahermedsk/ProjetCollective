@@ -12,6 +12,10 @@ import 'package:seriouse_game/models/cours.dart';
 class CoursViewModel extends ChangeNotifier{
   CoursViewModel();
 
+  // Information de la page actuelle
+  // 0 : Page de description
+  // 1-nbPage : Page de contenu
+  // >nbPage : Page de jeu
   int page = 0;
 
   final pageRepository = PageRepository();
@@ -32,9 +36,9 @@ class CoursViewModel extends ChangeNotifier{
 
   }
 
-  void changementPageSuivante() {
+  void changementPageSuivante() async {
     page++;
-    // #TODO : Indiquer que la page a été vu dans la bdd
+    await pageRepository.setPageVisite(page);
     notifyListeners();
   }
 
