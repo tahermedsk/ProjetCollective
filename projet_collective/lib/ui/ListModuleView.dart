@@ -5,6 +5,8 @@ import 'package:seriouse_game/ui/ModuleSelectionne.dart';
 
 import '../models/ListModuleViewModel.dart';
 
+import 'package:go_router/go_router.dart';
+
 class ListModulesView extends StatefulWidget {
 
   const ListModulesView({super.key});
@@ -89,7 +91,7 @@ class _ListModulesViewState extends State<ListModulesView> {
                   final item = listModuleViewModel.listModule[index];
         
                   //On build le widget à partir d'item
-                  return listModuleItem(item);
+                  return listModuleItem(item, context);
                 },
               ),
             ),   
@@ -102,7 +104,7 @@ class _ListModulesViewState extends State<ListModulesView> {
   }
 }
 
-SizedBox listModuleItem(Module item) {
+SizedBox listModuleItem(Module item, BuildContext context) {
 
   return SizedBox(
       child : 
@@ -114,7 +116,7 @@ SizedBox listModuleItem(Module item) {
         onTap: (){
 
           ModuleSelectionne.instance.moduleSelectionne = item;
-
+          GoRouter.of(context).go('/cours');
         }
       ),
     );

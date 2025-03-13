@@ -38,7 +38,7 @@ class _AppState extends State<App> {
   void changeTab(int index) {
     switch (index) {
       case 0:
-        context.go('/cours'); // context.go('/');
+        context.go('/');
         break;
       case 1:
         context.go('/module');

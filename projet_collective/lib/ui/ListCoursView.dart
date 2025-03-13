@@ -10,6 +10,8 @@ import '../models/cours.dart';
 import '../models/module.dart';
 import 'ModuleSelectionne.dart';
 
+import 'package:go_router/go_router.dart';
+
 class ListCoursView extends StatefulWidget {
 
   ListCoursViewModel listCours = ListCoursViewModel();
@@ -127,7 +129,7 @@ class ListCoursViewState extends State<ListCoursView>{
                         final item = moduleSelectionne.coursDuModule[index];
 
                         //On build le widget à partir du titre d'item
-                        return listItem(item);
+                        return listItem(item, context);
                       },
                       ),
                   ),  
@@ -224,7 +226,7 @@ class ListCoursViewState extends State<ListCoursView>{
     );
   }
   //Widget permettant d'afficher et de sélectionner un cours de la liste
-  SizedBox listItem(Cours cours){
+  SizedBox listItem(Cours cours, BuildContext context){
     
     return SizedBox(
       child : 
@@ -242,7 +244,7 @@ class ListCoursViewState extends State<ListCoursView>{
         onTap: (){
 
           CoursSelectionne.instance.cours = cours;
-
+          GoRouter.of(context).go('/cours');
         }
   
       ),
