@@ -176,10 +176,10 @@ List<QCM> testQCMs = [
   }
   
   // Test des repo de qcm
-  List<QCM> allQCMs = await qcmRepo.getAll();
+  List<int> allidQCMs = await qcmRepo.getAllIdByCoursId(1);
   print("Test des repo de qcm");
-  for (var fetchedQCM in allQCMs) {
-    QCM? qcm = await qcmRepo.getById(fetchedQCM.id);
+  for (var idQCM in allidQCMs) {
+    QCM? qcm = await qcmRepo.getById(idQCM);
     print("QCM récupéré: ${qcm!.id}, Cours: ${qcm!.idCours}");
     
     print("Vérification de la question associée...");

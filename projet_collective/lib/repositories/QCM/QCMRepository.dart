@@ -31,9 +31,22 @@ class QCMRepository {
 
       final reponseRepo = ReponseRepository();
       qcm.reponses = await reponseRepo.getByQCMId(qcm.id);
-      
+
       return qcm;
     }
     return null;
   }
+
+  /// Récupère tous les QCM.
+  Future<List<int>> getAllIdByCoursId(int idCours) async {
+    final db = await DatabaseHelper.instance.database;
+    final List<Map<String, dynamic>> maps = await db.query('QCM', where: "idCours = ?", whereArgs: [idCours]);
+
+    List<int> qcmIds = [];
+    for (final qcmMap in maps) {
+      qcmIds.add(qcmMap["idQCM"] as int);
+    }
+    return qcmIds;
+  }
+
 }
