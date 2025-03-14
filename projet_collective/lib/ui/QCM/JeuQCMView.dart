@@ -18,7 +18,7 @@ class _JeuQCMViewState extends State<JeuQCMView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Jeu QCM")),
-      body: FutureBuilder(
+      body: FutureBuilder<Map<String, dynamic>>(
         future: JeuQCMViewModel().recupererQCM(widget.idQCM),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -30,6 +30,7 @@ class _JeuQCMViewState extends State<JeuQCMView> {
           }
 
           var data = snapshot.data as Map<String, dynamic>;
+          print(data);
           String question = data["question"];
           List<dynamic> options = data["options"];
           int correctAnswer = data["correctAnswer"];

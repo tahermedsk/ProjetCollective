@@ -12,11 +12,19 @@ import 'package:seriouse_game/repositories/mediaCoursRepository.dart';
 import 'package:seriouse_game/repositories/objectifCoursRepository.dart';
 import 'package:seriouse_game/repositories/pageRepository.dart';
 
+import 'package:seriouse_game/repositories/QCM/QCMRepository.dart';
+import 'package:seriouse_game/repositories/QCM/QuestionRepository.dart';
+import 'package:seriouse_game/repositories/QCM/ReponseRepository.dart';
+
 import 'DataBase/database_helper.dart';
 import 'models/cours.dart';
 import 'models/mediaCours.dart';
 import 'models/objectifCours.dart';
 import 'models/page.dart';
+
+import 'models/QCM/qcm.dart';
+import 'models/QCM/question.dart';
+import 'models/QCM/reponse.dart';
 
 import 'package:seriouse_game/ui/CoursSelectionne.dart';
 
@@ -31,6 +39,10 @@ Future<void> insertSampleData() async {
   final mediaCoursRepository = MediaCoursRepository();
   final pageRepository = PageRepository();
   final objectifCoursRepository = ObjectifCoursRepository();
+
+  final questionRepo = QuestionRepository();
+  final reponseRepo = ReponseRepository();
+  final qcmRepo = QCMRepository();
 
   // Création d'un Module
   final module = Module(
@@ -92,6 +104,94 @@ Future<void> insertSampleData() async {
   List<Cours> lstCours = await coursRepository.getAll();
   coursSelectionne.setCours(lstCours[0]);
 
+  /// Données de test pour les QCM
+List<QCM> testQCMs = [
+  QCM(
+    id: 1,
+    numSolution: 2,
+    idCours: 1,
+    idQuestion: 1,
+    question: 
+      Question(
+        id: 1,
+        text: "Quel est le principal indicateur de la fiabilité d’une source d’information ?",
+        type: "text",
+      ),
+    
+    reponses: [
+      Reponse(id: 1, idQCM: 1, text: "Sa popularité sur les réseaux sociaux", type: "text"),
+      Reponse(id: 2, idQCM: 1, text: "La vérifiabilité des informations par d’autres sources fiables", type: "text"),
+      Reponse(id: 3, idQCM: 1, text: "Le nombre de commentaires sous l’article", type: "text"),
+      Reponse(id: 4, idQCM: 1, text: "Le design du site web", type: "text"),
+    ],
+  ),
+  QCM(
+    id: 2,
+    numSolution: 2,
+    idCours: 1,
+    idQuestion: 2,
+    question: 
+      Question(
+        id: 2,
+        text: "Quelle est la meilleure manière de vérifier une information trouvée en ligne ?",
+        type: "text",
+      ),
+    
+    reponses: [
+      Reponse(id: 5, idQCM: 2, text: "La partager immédiatement avec ses amis", type: "text"),
+      Reponse(id: 6, idQCM: 2, text: "Consulter plusieurs sources fiables et vérifier la cohérence de l’information", type: "text"),
+      Reponse(id: 7, idQCM: 2, text: "Faire confiance à la première source trouvée", type: "text"),
+      Reponse(id: 8, idQCM: 2, text: "Vérifier si l’information est amusante avant de la croire", type: "text"),
+    ],
+  ),
+  QCM(
+    id: 3,
+    numSolution: 2,
+    idCours: 1,
+    idQuestion: 3,
+    question: 
+      Question(
+        id: 3,
+        text: "Quel est un signe révélateur d’une fausse information ?",
+        type: "text",
+      ),
+    
+    reponses: [
+      Reponse(id: 9, idQCM: 3, text: "Elle provient d’un média reconnu et sérieux", type: "text"),
+      Reponse(id: 10, idQCM: 3, text: "Elle utilise un ton sensationnaliste et manque de sources vérifiables", type: "text"),
+      Reponse(id: 11, idQCM: 3, text: "Elle cite plusieurs experts et références", type: "text"),
+      Reponse(id: 12, idQCM: 3, text: "Elle est reprise par plusieurs médias de confiance", type: "text"),
+    ],
+  ),
+];
+
+  // Insertion des qcm dans la bdd
+  for (var qcm in testQCMs) {
+    await qcmRepo.insert(qcm);
+    await questionRepo.insert(qcm.question!);
+    
+    for (var reponse in qcm.reponses!) {
+      await reponseRepo.insert(reponse);
+    }
+  }
+  
+  // Test des repo de qcm
+  List<QCM> allQCMs = await qcmRepo.getAll();
+  print("Test des repo de qcm");
+  for (var fetchedQCM in allQCMs) {
+    QCM? qcm = await qcmRepo.getById(fetchedQCM.id);
+    print("QCM récupéré: ${qcm!.id}, Cours: ${qcm!.idCours}");
+    
+    print("Vérification de la question associée...");
+    print("Question: ${qcm!.question!.text}, Type: ${qcm!.question!.type}");
+    
+    print("Vérification des réponses associées...");
+    for (var reponse in qcm!.reponses!) {
+      print("Réponse: ${reponse.text}, Type: ${reponse.type}");
+    }
+  }
+
+  /*
   // Création de Mots (Mots pour le MotsCroises)
   final mot1 = Mot(
       idMotsCroises: 1,
@@ -121,6 +221,7 @@ Future<void> insertSampleData() async {
       description: 'Mini-jeu de mots croisés sur le journalisme',
       progression: 0);
   final miniJeuId = await miniJeuRepository.create(miniJeu);
+  */
 
   print('Toutes les données d\'exemple ont été insérées avec succès.');
   //testRepositories();

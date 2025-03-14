@@ -10,7 +10,7 @@ class JeuQCMViewModel {
   Future<Map<String, dynamic>> recupererQCM(int idQCM) async {
     try {
       // Récupérer la question depuis un fichier texte
-      String question = await rootBundle.loadString('lib/data/qcm/$idQCM/question.txt');
+      String question = "Quoi ?";//await rootBundle.loadString('lib/data/qcm/$idQCM/question.txt');
       if (question.isEmpty) {
        throw Exception("Le fichier question.txt est vide ou absent.");
       }
@@ -19,19 +19,21 @@ class JeuQCMViewModel {
       List<String> options = [];
       for (int i = 1; i <= 4; i++) {
         String textPath = 'lib/data/qcm/$idQCM/reponse$i.txt';
-        String imagePath = 'lib/data/qcm/$idQCM/reponse$i.png';
-
+        options.add("feur$i");
+        //String imagePath = 'lib/data/qcm/$idQCM/reponse$i.png';
+        /*
          if (await rootBundle.loadString(textPath).then((value) => value.isNotEmpty)) {
           options.add(await rootBundle.loadString(textPath));
         } else if (await rootBundle.loadString(imagePath).then((value) => value.isNotEmpty)) {
           options.add(imagePath); // On stocke juste le chemin de l'image
         } else {
           throw Exception("Réponse $i introuvable.");
-        }
+        }*/
       }
 
       // Récupérer l'indice de la bonne réponse
-      String indiceStr = await rootBundle.loadString('lib/data/qcm/$idQCM/solution.txt');
+      //String indiceStr = await rootBundle.loadString('lib/data/qcm/$idQCM/solution.txt');
+      String indiceStr = "2";
       int correctAnswer = int.tryParse(indiceStr.trim()) ?? -1;
       if (correctAnswer < 1 || correctAnswer > 4) {
         throw Exception("Indice de réponse invalide.");
