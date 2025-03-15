@@ -74,7 +74,7 @@ Future<void> insertSampleData() async {
 
 
   // Création d'une Page liée au cours
-  Page page = Page(idCours: coursId, ordre: 1,description: "page 1");
+  Page page = Page(idCours: coursId, urlAudio: "lib/data/AppData/music.mp3", ordre: 1,description: "page 1");
   int pageId = await pageRepository.create(page);
 
   MediaCours mediaCours = MediaCours(

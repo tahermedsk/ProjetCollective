@@ -4,6 +4,7 @@ class Page {
   int? id;
   int ordre;
   int idCours;
+  String urlAudio;
   int estVue;
   String? description ;
   List<MediaCours>? medias;
@@ -11,6 +12,7 @@ class Page {
   Page({
     this.id,
     required this.ordre,
+    this.urlAudio = "",
     this.estVue=0,
     required this.idCours,
      this.description ,
@@ -23,7 +25,8 @@ class Page {
       'ordre': ordre,
       'id_cours': idCours,
       'description':description,
-      'est_vue':estVue
+      'est_vue':estVue,
+      'urlAudio':urlAudio,
     };
   }
 
@@ -34,7 +37,8 @@ class Page {
       ordre: map['ordre'],
       idCours: map['id_cours'],
       description: map['description'],
-      estVue: map['est_vue']
+      estVue: map['est_vue'],
+      urlAudio: map['urlAudio']
     );
   }
 }

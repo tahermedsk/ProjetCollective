@@ -37,12 +37,14 @@ class ContenuCoursViewModel {
   }
 
   //Méthode permettant d'initialiser un lecteur audio avec l'url d'un fichier contenue dans un modèle.
-  Future<AudioPlayer> AudioLoader(MediaCours mediaModel) async {
+  Future<AudioPlayer> AudioLoader(String urlAudio) async {
 
+    /*
     //Teste si le modèle envoyée est bien un modèle prévu pour un fichier Audio. Sinon on renvoie une erreur.
     if(mediaModel.type!="audio"){
       throw Exception("Wrong type of ressources");
     }
+    */
 
     //Création du lecteur audio
     final player = AudioPlayer();
@@ -53,13 +55,13 @@ class ContenuCoursViewModel {
     try {
       //On tente de récupérer le fichier dans nos fichiers. Si une erreur est levée, c'est que le fichier n'existe pas (url incorrecte)
       //Nous ne pouvons pas chercher directement si le fichier existe : les méthodes de Dart le permettant ne fonctionnent pas bien sous Android
-       await rootBundle.load(mediaModel.url);
+       await rootBundle.load(urlAudio);
     } catch(_) {
       rethrow;
     }
 
     //On attend que le lecteur initialise notre fichier comme sa source.
-    await player.setSource(AssetSource(mediaModel.url));
+    await player.setSource(AssetSource(urlAudio));
   
     //On retourne le lecteur audio
     return player;

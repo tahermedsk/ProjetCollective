@@ -19,7 +19,6 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) { 
     // FutureBuilder permet d'attendre que les données d'exemple soient insérés avant le lancement de l'UI
-    // #TODO : Tester en ouvrant plusieurs fois l'application (Plusieurs insertions de données ?)
     return FutureBuilder<void>(
               future: insertSampleData(), // Récupération de la bonne View à charger selon la page visitée du cours sélectionné
               builder: (context, snapshot) {
