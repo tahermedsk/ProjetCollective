@@ -47,6 +47,7 @@ Future<void> insertSampleData() async {
   // Création d'un Module
   final module = Module(
       titre: 'Module de Journalisme',
+      urlImg: 'lib/data/AppData/facto-societe.png',
       description: 'Introduction au journalisme');
   final moduleId = await moduleRepository.create(module);
 

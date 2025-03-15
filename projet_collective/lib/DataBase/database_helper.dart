@@ -34,6 +34,7 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS module (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        urlImg TEXT NOT NULL,
         titre TEXT NOT NULL,
         description TEXT NOT NULL
       );

@@ -5,7 +5,7 @@ import 'package:seriouse_game/models/module.dart';
 //Singleton représentant le module sélectionné par l'utilisateur et les données qu'il contient.
 class ModuleSelectionne with ChangeNotifier {
 
-  Module moduleSelectionne = Module(titre: "titre", description: "description",id: 1);
+  Module moduleSelectionne = Module(titre: "titre",urlImg: "", description: "description",id: 1);
 
   static final ModuleSelectionne instance = ModuleSelectionne._internal() ;
 
