@@ -69,7 +69,11 @@ class CoursView extends StatelessWidget {
                       appBar: AppBar(
                         backgroundColor: Colors.white,
                         elevation: 2,
-                        title: HeaderWidget(cours: CoursSelectionne.instance.cours, coursViewModel: coursViewModel),
+                        title: FutureBuilder( // Permet d'attendre le calcul de progression 
+                                  future: coursViewModel.getProgressionActuelle(CoursSelectionne.instance.cours), 
+                                  builder: (context, snapshot) {  
+                                      return HeaderWidget(cours: CoursSelectionne.instance.cours, progression: snapshot.data);
+                                  }),
                         centerTitle: false,
                       ),
                       body: child,
@@ -91,42 +95,44 @@ class CoursView extends StatelessWidget {
 
 class HeaderWidget extends StatelessWidget {
   final Cours cours;
-  final CoursViewModel coursViewModel;
+  final double? progression;
 
   const HeaderWidget({
     Key? key,
     required this.cours,
-    required this.coursViewModel,
+    this.progression,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        const SizedBox(width: 8),
-        // Titre
-        Text(
-          cours.titre,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        // Barre de progression
-         ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: 0.5, // Progression à 50%
-              minHeight: 6,
-              color: Colors.teal,
-              backgroundColor: Colors.teal.withOpacity(0.2),
+          children: [
+            const SizedBox(width: 8),
+            // Titre
+            Text(
+              cours.titre,
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
             ),
-          ),
-        
-      ],
+            // Barre de progression
+            ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: progression, // Progression à 50%
+                  minHeight: 6,
+                  color: Colors.teal,
+                  backgroundColor: Colors.teal.withOpacity(0.2),
+                ),
+              ),
+            
+          ],
     );
+        
   }
+     
 }
 
 class FooterWidget extends StatelessWidget {

@@ -66,7 +66,11 @@ class ListCoursViewState extends State<ListCoursView>{
             	  children: [
 
                   //Appel du widget affichant le titre
-            	    moduleHeader(module),
+                  FutureBuilder( // Permet d'attendre le calcul de progression 
+                                  future: ListCoursViewModel().getProgressionModule(module), 
+                                  builder: (context, snapshot) {
+                                    return moduleHeader(module, snapshot.data);
+                                  } ),
 
                   //Affiche description et objectif du module en gras à gauche
                   Align(
@@ -146,9 +150,8 @@ class ListCoursViewState extends State<ListCoursView>{
 }
 
 //Widget correspondant au titre du module
-  SizedBox moduleHeader(Module module){
+  SizedBox moduleHeader(Module module, double? progress){
     //Valeur de la progression entre 0 et 1
-    double progress = 0.5;
     return SizedBox(
       child : Container(
         //Gestion de l'espace entre le contenu et la bordure interieure du widget
@@ -207,11 +210,12 @@ class ListCoursViewState extends State<ListCoursView>{
                       borderRadius: BorderRadius.circular(4),
                       //Barre de progression du module
                       child: LinearProgressIndicator(
-                          value: progress, //On utilise progress pour définir le remplissage
-                          minHeight: 6,
-                          color: const Color.fromARGB(255, 90, 230, 220),
-                          backgroundColor: const Color.fromARGB(255, 175, 240, 235),
-                        ),
+                                        value:progress, //On utilise progress pour définir le remplissage
+                                        minHeight: 6,
+                                        color: const Color.fromARGB(255, 90, 230, 220),
+                                        backgroundColor: const Color.fromARGB(255, 175, 240, 235),
+                                      )
+                    
                     ),
                 )
                   
@@ -239,7 +243,12 @@ class ListCoursViewState extends State<ListCoursView>{
           //Gestion de l'espace entre l'exterieur du widget et les widgets adjacents
           margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
           //On utilise le header de CoursView
-          child: HeaderWidget(cours: cours, coursViewModel: CoursViewModel())),
+          child: FutureBuilder( // Permet d'attendre le calcul de progression 
+                                  future: ListCoursViewModel().getProgressionCours(cours), 
+                                  builder: (context, snapshot) {  
+                                      return HeaderWidget(cours: cours, progression: snapshot.data);
+                                  }),
+                  ),
         //Méthode pour se aller au cours
         onTap: (){
 

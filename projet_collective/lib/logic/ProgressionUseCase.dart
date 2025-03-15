@@ -1,12 +1,60 @@
+import 'package:seriouse_game/repositories/coursRepository.dart';
+import 'package:seriouse_game/repositories/moduleRepository.dart';
 import 'package:seriouse_game/repositories/pageRepository.dart';
 
 class ProgressionUseCase {
-  final PageRepository pageRepository;
+  final pageRepository = PageRepository();
+  final coursRepository = CoursRepository();
+  final moduleRepository = ModuleRepository(); 
 
-  ProgressionUseCase({required this.pageRepository});
+  ProgressionUseCase();
+
+  // Méthode pour récupérer le pourcentage de pages vues pour un module donné en passant l'ID du module en paramètre
+  Future<double> calculerProgressionGlobale() async {
+    try {
+      // Récupération des modules
+      final lstModules = await moduleRepository.getAll();
+
+      // Somme des progressions des modules
+      double pourcentage = 0;
+      for (final module in lstModules) {
+        pourcentage += await calculerProgressionModule(module.id!);
+      }
+
+      // Moyenne
+      pourcentage /= lstModules.length;
+
+      return pourcentage;
+    } catch (e) {
+      print("Erreur lors du calcul du pourcentage de progression globale : $e");
+      return 0;
+    }
+  }
+
+  // Méthode pour récupérer le pourcentage de pages vues pour un module donné en passant l'ID du module en paramètre
+  Future<double> calculerProgressionModule(int moduleId) async {
+    try {
+      // Récupération des cours du module
+      final lstCours = await coursRepository.getCoursesByModuleId(moduleId);
+
+      // Somme des progressions des cours du module
+      double pourcentage = 0;
+      for (final cours in lstCours) {
+        pourcentage += await calculerProgressionCours(cours.id!);
+      }
+
+      // Moyenne
+      pourcentage /= lstCours.length;
+
+      return pourcentage;
+    } catch (e) {
+      print("Erreur lors du calcul du pourcentage de progression de module : $e");
+      return 0;
+    }
+  }
 
   // Méthode pour récupérer le pourcentage de pages vues pour un cours donné en passant l'ID du cours en paramètre
-  Future<double> getPourcentagePagesVues(int coursId) async {
+  Future<double> calculerProgressionCours(int coursId) async {
     try {
       // Récupération du nombre total de pages pour le cours
       final totalPages = await pageRepository.getNbPageByCourseId(coursId);
@@ -16,6 +64,22 @@ class ProgressionUseCase {
 
       // Calcul du pourcentage de pages vues
       final pourcentage = (pagesVues / totalPages) * 100;
+
+      return pourcentage;
+    } catch (e) {
+      print("Erreur lors du calcul du pourcentage de pages vues : $e");
+      return 0;
+    }
+  }
+
+  // Méthode pour récupérer le pourcentage de pages vues pour un cours donné en passant l'ID du cours en paramètre
+  Future<double> calculerProgressionActuelleCours(int coursId, int page) async {
+    try {
+      // Récupération du nombre total de pages pour le cours
+      final totalPages = await pageRepository.getNbPageByCourseId(coursId);
+
+      // Calcul du pourcentage de pages vues
+      final pourcentage = (page / totalPages) * 100;
 
       return pourcentage;
     } catch (e) {

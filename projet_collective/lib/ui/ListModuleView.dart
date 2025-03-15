@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:seriouse_game/models/ListCoursViewModel.dart';
 import 'package:seriouse_game/models/module.dart';
 import 'package:seriouse_game/ui/ListCoursView.dart';
 import 'package:seriouse_game/ui/ModuleSelectionne.dart';
@@ -121,8 +122,11 @@ SizedBox listModuleItem(Module item, BuildContext context) {
        
         //On utilise Inkwell pour transformer notre container en bouton
         InkWell(
-          child: 
-            moduleHeader(item),        
+          child: FutureBuilder( // Permet d'attendre le calcul de progression 
+                                  future: ListCoursViewModel().getProgressionModule(item), 
+                                  builder: (context, snapshot) {
+                                    return moduleHeader(item, snapshot.data);
+                                  } ),
           //Méthode pour aller au module
           onTap: (){
 
@@ -157,8 +161,6 @@ SizedBox listModuleItem(Module item, BuildContext context) {
 
 //Header affichant l'avancement dans le cours de l'utilisateur
 SizedBox headerAvancement(){
-
-  int advancement = 78;
 
   return SizedBox(
     child: Container(
@@ -209,12 +211,22 @@ SizedBox headerAvancement(){
                 color: Color.fromARGB(255, 3, 47, 122),),
 
               //Affichage du pourcentage d'avancement
-              Text("$advancement%",
-                style: const TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),),
+              FutureBuilder( // Permet d'attendre le calcul de progression 
+                                  future: ListModuleViewModel().getProgressionGlobale(), 
+                                  builder: (context, snapshot) {
+                                    String progress = "";
+                                    if (snapshot.hasData) {
+                                      progress = snapshot.data.toString();
+                                    } 
+
+                                    return Text("${progress}%",
+                                                style: const TextStyle(
+                                                                fontSize: 30,
+                                                                fontWeight: FontWeight.bold,
+                                                                color: Colors.white,
+                                                              ),);
+                                  } ),
+              
 
             ],
           ),         

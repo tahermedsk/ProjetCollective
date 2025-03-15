@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:seriouse_game/logic/ProgressionUseCase.dart';
 import 'package:seriouse_game/models/module.dart';
 import 'package:seriouse_game/repositories/moduleRepository.dart';
 
 //Classe permettant d'extraire la liste des modules
 class ListModuleViewModel with ChangeNotifier {
+  
+  final progressionUseCase = ProgressionUseCase();
 
   List<Module> listModule = List.empty();
 
@@ -20,5 +23,9 @@ class ListModuleViewModel with ChangeNotifier {
     notifyListeners();
   }
   
+  Future<int> getProgressionGlobale() async {
+    double progress = await progressionUseCase.calculerProgressionGlobale();
+    return progress.round();
+  }
 
 }
