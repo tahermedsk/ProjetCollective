@@ -73,7 +73,6 @@ Future<void> insertSampleData() async {
   print('Objectifs du cours ajoutés.');
 
 
-
   // Création d'une Page liée au cours
   Page page = Page(idCours: coursId, ordre: 1,description: "page 1");
   int pageId = await pageRepository.create(page);

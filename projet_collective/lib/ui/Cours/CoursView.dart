@@ -12,6 +12,8 @@ import 'package:seriouse_game/ui/CoursSelectionne.dart';
 import 'package:seriouse_game/models/cours.dart';
 import 'package:seriouse_game/repositories/coursRepository.dart';
 
+import 'package:go_router/go_router.dart';
+
 class CoursView extends StatelessWidget {
   CoursView({super.key}) {
     // MAJ du ViewModel avec le nouveau cours séléctionné
@@ -24,10 +26,11 @@ class CoursView extends StatelessWidget {
   
   final coursViewModel = CoursViewModel();
 
-  Future<void> changePage() async {
+  Future<void> changePage(BuildContext context) async {
     CoursSelectionne coursSelectionne = CoursSelectionne.instance;
 
     int nbPageCours = await coursViewModel.getNombrePageDeContenu(coursSelectionne.cours);
+    int nbPageJeu = await coursViewModel.getNombrePageDeJeu(coursSelectionne.cours);
     int page = coursViewModel.page;
 
     Widget nouvellePage = const Text("PB lors du chargement de la page de cours");
@@ -38,9 +41,12 @@ class CoursView extends StatelessWidget {
 
       nouvellePage = ContenuCoursView(cours: coursSelectionne.cours, selectedPageIndex: page - 1);
       //print("Chargement de contenu");
-    } else {
+    } else if (page<=nbPageCours + nbPageJeu) {
       // Page jeu 
       nouvellePage = JeuQCMView(idQCM: 1);
+    } else {
+      // Redirection vers la page de module
+      GoRouter.of(context).go('/module');
     }
 
     child = nouvellePage;
@@ -56,7 +62,7 @@ class CoursView extends StatelessWidget {
             // Sans, la page à afficher (ie this.child) est récupéré après le build : 
             //            Il n'est donc pas affiché
             return FutureBuilder<void>(
-              future: changePage(), // Récupération de la bonne View à charger selon la page visitée du cours sélectionné
+              future: changePage(context), // Récupération de la bonne View à charger selon la page visitée du cours sélectionné
               builder: (context, snapshot) {
 
                     return Scaffold(

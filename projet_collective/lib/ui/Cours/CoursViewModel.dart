@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:seriouse_game/models/mediaCours.dart';
+import 'package:seriouse_game/repositories/QCM/QCMRepository.dart';
 import 'package:video_player/video_player.dart';
 import 'package:seriouse_game/repositories/mediaCoursRepository.dart';
 import 'package:seriouse_game/repositories/pageRepository.dart';
@@ -19,11 +20,18 @@ class CoursViewModel extends ChangeNotifier{
   int page = 0;
 
   final pageRepository = PageRepository();
+  final qcmRepository = QCMRepository();
   final mediaCoursRepository = MediaCoursRepository();
 
   Future<int> getNombrePageDeContenu(Cours cours) {
     return pageRepository.getPagesByCourseId(cours.id!).then((lstPage) {
       return lstPage.length;
+    });
+  }
+
+  Future<int> getNombrePageDeJeu(Cours cours) {
+    return qcmRepository.getAllIdByCoursId(cours.id!).then((lstIdPageJeu) {
+      return lstIdPageJeu.length;
     });
   }
 
