@@ -108,6 +108,7 @@ class DescriptionView extends StatelessWidget {
                       child: const Text(
                         "Commencer le cours",
                         style: TextStyle(fontSize: 18),
+
                       ),
                     ),
                   ),

@@ -58,39 +58,54 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+          backgroundColor: const Color.fromRGBO(252, 179, 48, 1),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'lib/data/AppData/facto-logo.png',
+                'lib/data/AppData/CharteFactoscope/logo-factoscope_seul.png',
                 height: 40, // Ajuste la hauteur
+                width: 190,
                 fit: BoxFit.contain, // Garde les proportions
               ),
-              const SizedBox(width: 10), // Espace entre l'image et le texte
-              const Text('Factoscope'),
+              const SizedBox(width: 10), // Espace entre l'image et le texte,
             ],
           ),
           centerTitle: true,
         ),
       body: widget.child,
-      bottomNavigationBar: BottomNavigationBar(
-        onTap: changeTab,
-        backgroundColor: const Color.fromRGBO(252, 179, 48, 1),
-        currentIndex: currentIndex,
-        items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.book),
-              label: 'Modules',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.verified),
-              label: 'Certification',
-            ),
-        ],
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color: const Color.fromRGBO(41, 36, 96, 1),
+          borderRadius: const BorderRadius.only(
+            topLeft: const Radius.circular(20),
+            topRight: const Radius.circular(20),
+          )
+        ),
+        child: BottomNavigationBar(
+          onTap: changeTab,
+          backgroundColor: Colors.transparent,
+          currentIndex: currentIndex,
+          unselectedItemColor: Colors.white,
+          selectedItemColor: const Color.fromRGBO(252, 179, 48, 1),
+          items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Icon(Icons.home),
+                ),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.book),
+                label: 'Modules',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.verified),
+                label: 'Certification',
+              ),
+          ],
+        ),
       ),
     );
   }
