@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:seriouse_game/models/ListCoursViewModel.dart';
+import 'package:seriouse_game/models/mediaCours.dart';
+import 'package:seriouse_game/ui/Contenu/WidgetContenu/ContenuImageWidget.dart';
 import 'package:seriouse_game/ui/Cours/CoursView.dart';
-import 'package:seriouse_game/ui/Cours/CoursViewModel.dart';
 import 'package:seriouse_game/ui/CoursSelectionne.dart';
 
 import '../models/cours.dart';
@@ -151,7 +152,12 @@ class ListCoursViewState extends State<ListCoursView>{
 
 //Widget correspondant au titre du module
   SizedBox moduleHeader(Module module, double? progress){
-    //Valeur de la progression entre 0 et 1
+    //progress : Valeur de la progression entre 0 et 1
+    //module : module dont on veut afficher le header
+
+    //Model utilisé pour récupérer l'image du module à afficher dans le header. 
+    MediaCours media = MediaCours(idPage: 1, ordre: 1, url: module.urlImg, type: "image");
+
     return SizedBox(
       child : Container(
         //Gestion de l'espace entre le contenu et la bordure interieure du widget
@@ -167,13 +173,8 @@ class ListCoursViewState extends State<ListCoursView>{
         child : Row(
           children: [
 
-            //Image à load
-
-            Image.asset(
-                'lib/data/AppData/facto-logo.png',
-                height: 80, // Ajuste la hauteur
-                fit: BoxFit.contain, // Garde les proportions
-              ),
+            //Image à load. Utilise le model media contenant l'url de l'image du model.
+            ContenuImageWidget(media: media, width: 80, height: 80,),
 
             const Spacer(),
             
@@ -246,7 +247,18 @@ class ListCoursViewState extends State<ListCoursView>{
           child: FutureBuilder( // Permet d'attendre le calcul de progression 
                                   future: ListCoursViewModel().getProgressionCours(cours), 
                                   builder: (context, snapshot) {  
-                                      return HeaderWidget(cours: cours, progression: snapshot.data);
+                                      return Container(
+                                        //Gestion de l'espace entre le contenu et la bordure interieure du widget
+                                        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
+                                        //Décoration de la bordure
+                                        decoration: BoxDecoration(
+                                        //Gestion de l'angle de la bordure
+                                        borderRadius:BorderRadius.circular(12),
+                                        //Couleur interne et externe de la boite
+                                        color: const Color.fromARGB(255, 235, 235, 235),),
+                                        
+                                        child: 
+                                          HeaderWidget(cours: cours, progression: snapshot.data));
                                   }),
                   ),
         //Méthode pour se aller au cours
