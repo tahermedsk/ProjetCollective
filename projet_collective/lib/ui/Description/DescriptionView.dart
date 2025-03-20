@@ -111,10 +111,14 @@ class DescriptionView extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
+                        backgroundColor: const Color.fromRGBO(252, 179, 48, 1)
                       ),
                       child: const Text(
                         "Commencer le cours",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white
+                        ),
 
                       ),
                     ),

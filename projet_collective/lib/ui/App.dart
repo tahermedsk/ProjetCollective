@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:seriouse_game/ui/LaunchScreen/LaunchScreenView.dart';
 import 'package:seriouse_game/ui/ListCoursView.dart';
 import 'package:seriouse_game/ui/ListModuleView.dart';
 import 'package:seriouse_game/ui/Cours/CoursView.dart';
@@ -15,7 +17,7 @@ final router = GoRouter(
       builder: (context, state, child) => App(child: child),
       routes: [
         GoRoute(path: '/', builder: (context, state) => const ListModulesView()),
-        GoRoute(path: '/module', builder: (context, state) => ListCoursView()),
+        GoRoute(path: '/module', builder: (context, state) => const ListCoursView()),
         GoRoute(path: '/cours', builder: (context, state) => CoursView()),
       ],
     ),
@@ -38,7 +40,7 @@ class _AppState extends State<App> {
   void changeTab(int index) {
     switch (index) {
       case 0:
-        context.go('/');
+        context.go('/cours'); // context.go('/');
         break;
       case 1:
         context.go('/module');
@@ -51,6 +53,16 @@ class _AppState extends State<App> {
     }
     setState(() {
       currentIndex = index;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 3700), () {
+      setState(() {
+        showLaunchScreen = false;
+      });
     });
   }
 
