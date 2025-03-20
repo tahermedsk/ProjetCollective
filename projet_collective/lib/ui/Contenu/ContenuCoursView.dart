@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seriouse_game/models/cours.dart';
+import 'package:seriouse_game/ui/Contenu/WidgetContenu/ContenuAudioWidget.dart';
 import 'package:seriouse_game/ui/Contenu/WidgetContenu/ContenuImageWidget.dart';
 import 'package:seriouse_game/ui/Contenu/WidgetContenu/ContenuVideoWidget.dart';
 import 'package:seriouse_game/ui/Contenu/WidgetContenu/ContenuTextWidget.dart';
@@ -7,7 +8,7 @@ import 'package:seriouse_game/ui/Contenu/ContenuCoursViewModel.dart';
 
 class ContenuCoursView extends StatelessWidget {
   final Cours cours;
-  final int selectedPageIndex; // Nouvelle propriété pour choisir la page
+  final int selectedPageIndex;
 
   const ContenuCoursView({
     super.key, 
@@ -25,22 +26,33 @@ class ContenuCoursView extends StatelessWidget {
 
     var page = cours.pages![selectedPageIndex];
 
+    List<Widget> lstWidgetAudio = [];
+    if (page.urlAudio!="") {
+      lstWidgetAudio = [ContenuAudioWidget(urlAudio: page.urlAudio).build(context)];
+    }
+
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: page.medias?.map((media) {
-          print("Media url: ${media.url}");
+        children: List.from(
+          lstWidgetAudio
+          
+        )..addAll(
+                page.medias?.map((media) {
+                print("Media url: ${media.url}");
 
-          if (media.type == "image") {
-            return ContenuImageWidget(media: media);
-          } else if (media.type == "video") {
-              return ContenuVideoWidget(data: media);
-          } else if (media.type == "text") {
-            return ContenuTextWidget(filePath: media.url);
-          } else {
-            return const SizedBox(); // Cas inconnu
-          }
-        }).toList() ?? [],
+                if (media.type == "image") {
+                  return ContenuImageWidget(media: media);
+                } else if (media.type == "video") {
+                    return ContenuVideoWidget(data: media);
+                } else if (media.type == "text") {
+                  return ContenuTextWidget(filePath: media.url);
+                } else {
+                  return const SizedBox(); // Cas inconnu
+                }
+              }).toList() ?? []
+        ),
       ),
     );
   }

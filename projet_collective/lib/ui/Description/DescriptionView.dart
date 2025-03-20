@@ -5,8 +5,15 @@ import 'package:seriouse_game/services/coursService.dart';
 import 'package:seriouse_game/models/cours.dart';
 import 'package:seriouse_game/models/objectifCours.dart'; // Importe le modèle ObjectifCours
 
+
+import 'package:seriouse_game/models/cours.dart';
+import 'package:seriouse_game/ui/Cours/CoursViewModel.dart';
+
 class DescriptionView extends StatelessWidget {
-  const DescriptionView({Key? key}) : super(key: key);
+  const DescriptionView({Key? key, required this.cours, required this.coursViewModel}) : super(key: key);
+
+  final CoursViewModel coursViewModel; // Permet de changer la page de cours (utilisé pour le bouton "Commencer le cours")
+  final Cours cours;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +24,7 @@ class DescriptionView extends StatelessWidget {
         title: const Text("Description du Cours"),
       ),
       body: FutureBuilder<Cours?>(
-        future: coursService.getCoursWithObjectifs(1), // Remplace 1 par l'ID du cours
+        future: coursService.getCoursWithObjectifs(cours.id!), 
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -37,7 +44,7 @@ class DescriptionView extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(12),
                     child: Image.asset(
-                      'lib/data/AppData/goals.png', // Remplace par ton image
+                      'lib/data/AppData/goals.png', // #TODO: Remplace par ton image
                       fit: BoxFit.cover,
                       height: 200,
                       width: double.infinity,
@@ -94,7 +101,7 @@ class DescriptionView extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {
                         // Action pour démarrer le cours
-                        print("Commencer le cours");
+                        coursViewModel.changementPageSuivante();
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(

@@ -3,7 +3,9 @@ import 'dart:ffi';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:seriouse_game/logic/ProgressionUseCase.dart';
 import 'package:seriouse_game/models/mediaCours.dart';
+import 'package:seriouse_game/repositories/QCM/QCMRepository.dart';
 import 'package:video_player/video_player.dart';
 import 'package:seriouse_game/repositories/mediaCoursRepository.dart';
 import 'package:seriouse_game/repositories/pageRepository.dart';
@@ -12,14 +14,26 @@ import 'package:seriouse_game/models/cours.dart';
 class CoursViewModel extends ChangeNotifier{
   CoursViewModel();
 
+  // Information de la page actuelle
+  // 0 : Page de description
+  // 1-nbPage : Page de contenu
+  // >nbPage : Page de jeu
   int page = 0;
 
   final pageRepository = PageRepository();
+  final qcmRepository = QCMRepository();
   final mediaCoursRepository = MediaCoursRepository();
+  final progressionUseCase = ProgressionUseCase();
 
   Future<int> getNombrePageDeContenu(Cours cours) {
     return pageRepository.getPagesByCourseId(cours.id!).then((lstPage) {
       return lstPage.length;
+    });
+  }
+
+  Future<int> getNombrePageDeJeu(Cours cours) {
+    return qcmRepository.getAllIdByCoursId(cours.id!).then((lstIdPageJeu) {
+      return lstIdPageJeu.length;
     });
   }
 
@@ -32,8 +46,9 @@ class CoursViewModel extends ChangeNotifier{
 
   }
 
-  void changementPageSuivante() {
+  void changementPageSuivante() async {
     page++;
+    await pageRepository.setPageVisite(page);
     notifyListeners();
   }
 
@@ -44,6 +59,9 @@ class CoursViewModel extends ChangeNotifier{
     }
   }
   
+  Future<double> getProgressionActuelle(Cours cours) async {
+    return await progressionUseCase.calculerProgressionActuelleCours(cours.id!, page)/100;
+  }
 
   Future<void> loadContenu(Cours cours) async {
     // Récupération des pages associées au cours

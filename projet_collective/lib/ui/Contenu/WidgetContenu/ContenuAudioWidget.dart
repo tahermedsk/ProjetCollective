@@ -12,14 +12,14 @@ import 'ContenuVideoWidget.dart'; // Cet import sert à récupérer les fonction
 
 class ContenuAudioWidget extends StatelessWidget {
 
-  late MediaCours data; // contient les données permettant de localiser le fichier audio à jouer
-  late ContenuCoursViewModel fileLoader; // objet chargé d'initialiser le lecteur audio en utililisant les données de data
+  late String urlAudio; // Url permettant de localiser le fichier audio à jouer
+  late ContenuCoursViewModel fileLoader; // objet chargé d'initialiser le lecteur audio en utililisant les urlAudio
   late AudioPlayer player; //lecteur audio
   late bool error = false; // permet de gerer les erreurs remontés par le fileloader et gérer leur affichage
 
   //Constructeur permettant d'initialiser cette classe. Pour créer une instance de cette classe, on apelle ce constructeur de cette façon :
   //ContenuAudioWidget(data: data)
-  ContenuAudioWidget({super.key, required this.data}){
+  ContenuAudioWidget({super.key, required this.urlAudio}){
     fileLoader = ContenuCoursViewModel();
     player = AudioPlayer();
   }
@@ -28,7 +28,7 @@ class ContenuAudioWidget extends StatelessWidget {
   Future<AudioPlayer> initAudioPlayer() async {
     try {
       //initialisation du lecteur audio par le fileloader
-      player = await fileLoader.AudioLoader(data);
+      player = await fileLoader.AudioLoader(urlAudio);
       //Permet de faire jouer le lecteur en boucle. Attention désactiver cette option entraîne une suppression du lecteur à la fin de la lecture !
       await player.setReleaseMode(ReleaseMode.loop);
     } catch(_){

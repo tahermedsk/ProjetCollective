@@ -34,6 +34,7 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS module (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        urlImg TEXT NOT NULL,
         titre TEXT NOT NULL,
         description TEXT NOT NULL
       );
@@ -54,6 +55,7 @@ class DatabaseHelper {
        id INTEGER PRIMARY KEY AUTOINCREMENT,
        description TEXT ,
        ordre INTEGER NOT NULL,
+       urlAudio TEST DEFAULT "",
        est_vue INTEGER DEFAULT 0,
        id_cours INTEGER NOT NULL,
        FOREIGN KEY (id_cours) REFERENCES cours (id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -114,6 +116,60 @@ class DatabaseHelper {
         FOREIGN KEY (id_cours) REFERENCES cours (id) ON DELETE CASCADE
     );
 ''');
+
+    await db.execute('''
+CREATE TABLE Question(
+   idQuestion INTEGER,
+   PRIMARY KEY(idQuestion)
+);''');
+
+  await db.execute('''CREATE TABLE QuestionImg(
+   idQuestion INTEGER,
+   urlImage TEXT NOT NULL,
+   caption TEXT NOT NULL,
+   PRIMARY KEY(idQuestion),
+   FOREIGN KEY(idQuestion) REFERENCES Question(idQuestion)
+);''');
+
+  await db.execute('''CREATE TABLE QuestionText(
+   idQuestion INTEGER,
+   txt TEXT NOT NULL,
+   PRIMARY KEY(idQuestion),
+   FOREIGN KEY(idQuestion) REFERENCES Question(idQuestion)
+);''');
+
+  await db.execute('''CREATE TABLE QCM(
+   idQCM INTEGER,
+   numSolution INTEGER NOT NULL,
+   idCours INTEGER NOT NULL,
+   idQuestion INTEGER NOT NULL,
+   PRIMARY KEY(idQCM),
+   UNIQUE(idQuestion),
+   FOREIGN KEY(idCours) REFERENCES cours(id),
+   FOREIGN KEY(idQuestion) REFERENCES Question(idQuestion)
+);''');
+
+  await db.execute('''CREATE TABLE Reponse(
+   idReponse INTEGER,
+   idQCM INTEGER NOT NULL,
+   PRIMARY KEY(idReponse),
+   FOREIGN KEY(idQCM) REFERENCES QCM(idQCM)
+);''');
+
+  await db.execute('''CREATE TABLE ReponseImg(
+   idReponse INTEGER,
+   urlImage TEXT NOT NULL,
+   caption TEXT NOT NULL,
+   PRIMARY KEY(idReponse),
+   FOREIGN KEY(idReponse) REFERENCES Reponse(idReponse)
+);''');
+
+  await db.execute('''CREATE TABLE ReponseText(
+   idReponse INTEGER,
+   txt TEXT NOT NULL,
+   PRIMARY KEY(idReponse),
+   FOREIGN KEY(idReponse) REFERENCES Reponse(idReponse)
+);''');
 
 
   }

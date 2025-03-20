@@ -15,7 +15,7 @@ final router = GoRouter(
       builder: (context, state, child) => App(child: child),
       routes: [
         GoRoute(path: '/', builder: (context, state) => const ListModulesView()),
-        GoRoute(path: '/module', builder: (context, state) => const ListCoursView()),
+        GoRoute(path: '/module', builder: (context, state) => ListCoursView()),
         GoRoute(path: '/cours', builder: (context, state) => CoursView()),
       ],
     ),
@@ -38,7 +38,7 @@ class _AppState extends State<App> {
   void changeTab(int index) {
     switch (index) {
       case 0:
-        context.go('/cours'); // context.go('/');
+        context.go('/');
         break;
       case 1:
         context.go('/module');

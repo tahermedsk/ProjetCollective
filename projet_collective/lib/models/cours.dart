@@ -1,8 +1,6 @@
 import 'package:seriouse_game/models/objectifCours.dart';
 import 'package:seriouse_game/models/page.dart';
 
-import 'mediaCours.dart';
-
 class Cours {
    int? id;
    int idModule;
