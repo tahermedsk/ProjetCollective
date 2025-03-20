@@ -1,15 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-
-
-
-
+import 'package:seriouse_game/ui/CoursSelectionne.dart';
  
 class JeuQCMViewModel {
-  Future<Map<String, dynamic>> recupererQCM(int idQCM) async {
+  Future<Map<String, dynamic>> recupererQCM(int idQCM, int selectedPageIndex) async {
     try {
       // Récupérer la question depuis un fichier texte
+      print(selectedPageIndex);
       String question = "Quoi ?";//await rootBundle.loadString('lib/data/qcm/$idQCM/question.txt');
       if (question.isEmpty) {
        throw Exception("Le fichier question.txt est vide ou absent.");

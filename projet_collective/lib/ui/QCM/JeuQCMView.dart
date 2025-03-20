@@ -4,7 +4,9 @@ import 'JeuQCMViewModel.dart';
 
 class JeuQCMView extends StatefulWidget {
   final int idQCM;
-  const JeuQCMView({super.key, required this.idQCM});
+  final int selectedPageIndex;
+
+  const JeuQCMView({super.key, required this.idQCM, required this.selectedPageIndex});
 
   @override
   _JeuQCMViewState createState() => _JeuQCMViewState();
@@ -19,7 +21,7 @@ class _JeuQCMViewState extends State<JeuQCMView> {
     return Scaffold(
       appBar: AppBar(title: const Text("Jeu QCM")),
       body: FutureBuilder<Map<String, dynamic>>(
-        future: JeuQCMViewModel().recupererQCM(widget.idQCM),
+        future: JeuQCMViewModel().recupererQCM(widget.idQCM, widget.selectedPageIndex),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
