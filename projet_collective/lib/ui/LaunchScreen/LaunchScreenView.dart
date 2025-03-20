@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:seriouse_game/ui/ListModuleView.dart';
 
 class LaunchScreenView extends StatefulWidget {
+  const LaunchScreenView({super.key});
+
   @override
   _LaunchScreenViewState createState() => _LaunchScreenViewState();
 }
