@@ -43,7 +43,7 @@ class CoursView extends StatelessWidget {
       //print("Chargement de contenu");
     } else if (page<=nbPageCours + nbPageJeu) {
       // Page jeu 
-      nouvellePage = JeuQCMView(idQCM: 1, selectedPageIndex: page - nbPageCours - 1);
+      nouvellePage = JeuQCMView(cours: coursSelectionne.cours, selectedPageIndex: page - nbPageCours - 1);
     } else {
       // Redirection vers la page de module
       GoRouter.of(context).go('/module');
