@@ -17,18 +17,22 @@ class JeuQCMViewModel {
       List<int> idQCMList = await qcmRepo.getAllIdByCoursId(cours.id!);
       QCM? qcm = await qcmRepo.getById(idQCMList[selectedPageIndex]);
       
-      Question? questions;
+      Question? question;
       List<Reponse>? reponses = [];
-      int? solutions;
+      int? solution;
       
-      questions = qcm!.question;
+      if (qcm == null || qcm.question == null || qcm.reponses == null || qcm.numSolution == null) {
+        throw Exception("QCM incomplet ou invalide");
+      }
+
+      question = qcm!.question;
       reponses = qcm!.reponses;
-      solutions = qcm!.numSolution;
+      solution = qcm!.numSolution;
       
       return {
-        "question": questions,
+        "question": question,
         "options": reponses,
-        "correctAnswer": solutions,
+        "correctAnswer": solution,
       };
     
     } catch (e) {
