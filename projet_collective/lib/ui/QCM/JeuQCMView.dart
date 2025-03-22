@@ -1,5 +1,6 @@
-
 import 'package:flutter/material.dart';
+import 'package:seriouse_game/models/QCM/question.dart';
+import 'package:seriouse_game/models/QCM/reponse.dart';
 import 'package:seriouse_game/models/cours.dart';
 import 'JeuQCMViewModel.dart';
 
@@ -17,6 +18,20 @@ class _JeuQCMViewState extends State<JeuQCMView> {
   int? _selectedAnswer;
   bool _validated = false;
 
+  // Ajout de la logique pour suivre si on est sur la question suivante
+  @override
+  void didUpdateWidget(covariant JeuQCMView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+    // Si la page sélectionnée change, réinitialiser l'état
+    if (oldWidget.selectedPageIndex != widget.selectedPageIndex) {
+      setState(() {
+        _selectedAnswer = null;
+        _validated = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,15 +48,33 @@ class _JeuQCMViewState extends State<JeuQCMView> {
           }
 
           var data = snapshot.data as Map<String, dynamic>;
-          print(data);
-          String question = data["question"];
-          List<dynamic> options = data["options"];
+
+          Question question = data["question"];
+          String? questionText;
+          if (question.type == "text") {
+            questionText = question.text;
+          } else if (question.type == "image") {
+            questionText = question.imageUrl;
+          } else {
+            throw Exception("Format question non respecte : Image ou texte ");
+          }
+
+          List<Reponse> reponses = data["options"];
+          List<String?> reponseText;
+          if (reponses.first.imageUrl == null && reponses.first.text != null) {
+            reponseText = reponses.map((r) => r.text).toList();
+          } else if (reponses.first.imageUrl != null && reponses.first.text == null) {
+            reponseText = reponses.map((r) => r.imageUrl).toList();
+          } else {
+            throw Exception("Format reponse non respecter : Image ou texte ");
+          }
+
           int correctAnswer = data["correctAnswer"];
 
           return Column(
             children: [
-              _buildQuestionWidget(question),
-              ...List.generate(4, (index) => _buildAnswerWidget(options[index], index + 1, correctAnswer)),
+              _buildQuestionWidget(questionText),
+              ...List.generate(reponseText.length, (index) => _buildAnswerWidget(reponseText[index], index + 1, correctAnswer)),
               ElevatedButton(
                 onPressed: _selectedAnswer == null
                     ? null
