@@ -20,7 +20,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) { 
     // FutureBuilder permet d'attendre que les données d'exemple soient insérés avant le lancement de l'UI
     return FutureBuilder<void>(
-              future: insertSampleData(), // Récupération de la bonne View à charger selon la page visitée du cours sélectionné
+              future: insertSampleData(), // Insertion des données dans la bdd
               builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                         case ConnectionState.done: // L'insertion est fini : 

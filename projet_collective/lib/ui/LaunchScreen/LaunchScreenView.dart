@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:seriouse_game/ui/App.dart';
 import 'dart:async';
 import 'package:seriouse_game/ui/ListModuleView.dart';
 
@@ -40,12 +41,9 @@ class _LaunchScreenViewState extends State<LaunchScreenView> with SingleTickerPr
     ));
 
     Future.delayed(const Duration(seconds: 2), () {
-      _controller.forward().then((_) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => ListModulesView()),
-        );
-      });
+      _controller.forward();
     });
+    
   }
 
   @override
