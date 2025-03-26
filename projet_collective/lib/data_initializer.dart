@@ -15,6 +15,7 @@ import 'package:seriouse_game/repositories/pageRepository.dart';
 import 'package:seriouse_game/repositories/QCM/QCMRepository.dart';
 import 'package:seriouse_game/repositories/QCM/QuestionRepository.dart';
 import 'package:seriouse_game/repositories/QCM/ReponseRepository.dart';
+import 'package:seriouse_game/ui/ModuleSelectionne.dart';
 
 import 'DataBase/database_helper.dart';
 import 'models/cours.dart';
@@ -28,10 +29,7 @@ import 'models/QCM/reponse.dart';
 
 import 'package:seriouse_game/ui/CoursSelectionne.dart';
 
-Future<void> insertSampleData() async {
-  await DatabaseHelper.instance.resetDatabase();
-
-  final moduleRepository = ModuleRepository();
+final moduleRepository = ModuleRepository();
   final coursRepository = CoursRepository();
   final motRepository = MotRepository();
   final motsCroisesRepository = MotsCroisesRepository();
@@ -44,15 +42,16 @@ Future<void> insertSampleData() async {
   final reponseRepo = ReponseRepository();
   final qcmRepo = QCMRepository();
 
+Future<void> insertModule1() async {
   // Création du Module
   final module = Module(
-      titre: 'Module de Journalisme',
-      urlImg: 'lib/data/AppData/journalisme.png',
-      description: 'Introduction au journalisme');
+      titre: 'Citoyens engagés',
+      urlImg: 'lib/data/AppData/facto-societe.png',
+      description: 'Chaque citoyen a un rôle à jouer en matière de lutte contre la désinformation… À condition qu’il maîtrise les codes de son environnement informationnel : les sources à sa disposition, les fondements du travail journalistique, les rouages des réseaux sociaux numériques, les risques désinformationnels, etc. A nous tous de nous emparer de ces connaissances pour exercer pleinement et librement nos droits et devoirs de citoyens !');
   final moduleId = await moduleRepository.create(module);
 
   // Création du Cours
-  final cours = Cours(
+  Cours cours = Cours(
       idModule: moduleId,
       titre: 'Les sources d’informations',
       contenu: 'Comprendre et évaluer les sources d’information.');
@@ -127,97 +126,66 @@ Future<void> insertSampleData() async {
       type: 'image',
       caption: 'Techniques de vérification des fake news'));
 
-  /*
-  // Création d'une Page liée au cours
-  Page page = Page(idCours: coursId, urlAudio: "lib/data/AppData/music.mp3", ordre: 1,description: "page 1");
-  int pageId = await pageRepository.create(page);
-
-  MediaCours mediaCours = MediaCours(
-      idPage: pageId,
-      ordre: 1,
-      url: 'lib/data/AppData/goals.png',
-      type: 'image',
-      caption: 'logo flutter');
-  await mediaCoursRepository.create(mediaCours);
-
-
-  // Création d'une Page liée au cours
-  page = Page(idCours: coursId, ordre: 2,description: "page 2");
-  pageId = await pageRepository.create(page);
-
-// Insertion de MediaCours lié à cette page
-  mediaCours = MediaCours(
-      idPage: pageId,
-      ordre: 1,
-      url: 'lib/data/AppData/explication.txt',
-      type: 'text');
-  await mediaCoursRepository.create(mediaCours);
-  */
-  // Init du singleton CoursSelectionne
-  CoursSelectionne coursSelectionne = CoursSelectionne.instance;
-  List<Cours> lstCours = await coursRepository.getAll();
-  coursSelectionne.setCours(lstCours[0]);
-
   /// Données de test pour les QCM
-List<QCM> testQCMs = [
-  QCM(
-    id: 1,
-    numSolution: 2,
-    idCours: 1,
-    idQuestion: 1,
-    question: 
-      Question(
-        id: 1,
-        text: "Quel est le principal indicateur de la fiabilité d’une source d’information ?",
-        type: "text",
-      ),
-    
-    reponses: [
-      Reponse(id: 1, idQCM: 1, text: "Sa popularité sur les réseaux sociaux", type: "text"),
-      Reponse(id: 2, idQCM: 1, text: "La vérifiabilité des informations par d’autres sources fiables", type: "text"),
-      Reponse(id: 3, idQCM: 1, text: "Le nombre de commentaires sous l’article", type: "text"),
-      Reponse(id: 4, idQCM: 1, text: "Le design du site web", type: "text"),
-    ],
-  ),
-  QCM(
-    id: 2,
-    numSolution: 2,
-    idCours: 1,
-    idQuestion: 2,
-    question: 
-      Question(
-        id: 2,
-        text: "Quelle est la meilleure manière de vérifier une information trouvée en ligne ?",
-        type: "text",
-      ),
-    
-    reponses: [
-      Reponse(id: 5, idQCM: 2, text: "La partager immédiatement avec ses amis", type: "text"),
-      Reponse(id: 6, idQCM: 2, text: "Consulter plusieurs sources fiables et vérifier la cohérence de l’information", type: "text"),
-      Reponse(id: 7, idQCM: 2, text: "Faire confiance à la première source trouvée", type: "text"),
-      Reponse(id: 8, idQCM: 2, text: "Vérifier si l’information est amusante avant de la croire", type: "text"),
-    ],
-  ),
-  QCM(
-    id: 3,
-    numSolution: 2,
-    idCours: 1,
-    idQuestion: 3,
-    question: 
-      Question(
-        id: 3,
-        text: "Quel est un signe révélateur d’une fausse information ?",
-        type: "text",
-      ),
-    
-    reponses: [
-      Reponse(id: 9, idQCM: 3, text: "Elle provient d’un média reconnu et sérieux", type: "text"),
-      Reponse(id: 10, idQCM: 3, text: "Elle utilise un ton sensationnaliste et manque de sources vérifiables", type: "text"),
-      Reponse(id: 11, idQCM: 3, text: "Elle cite plusieurs experts et références", type: "text"),
-      Reponse(id: 12, idQCM: 3, text: "Elle est reprise par plusieurs médias de confiance", type: "text"),
-    ],
-  ),
-];
+  List<QCM> testQCMs = [
+    QCM(
+      id: 1,
+      numSolution: 2,
+      idCours: 1,
+      idQuestion: 1,
+      question: 
+        Question(
+          id: 1,
+          text: "Quel est le principal indicateur de la fiabilité d’une source d’information ?",
+          type: "text",
+        ),
+      
+      reponses: [
+        Reponse(id: 1, idQCM: 1, text: "Sa popularité sur les réseaux sociaux", type: "text"),
+        Reponse(id: 2, idQCM: 1, text: "La vérifiabilité des informations par d’autres sources fiables", type: "text"),
+        Reponse(id: 3, idQCM: 1, text: "Le nombre de commentaires sous l’article", type: "text"),
+        Reponse(id: 4, idQCM: 1, text: "Le design du site web", type: "text"),
+      ],
+    ),
+    QCM(
+      id: 2,
+      numSolution: 2,
+      idCours: 1,
+      idQuestion: 2,
+      question: 
+        Question(
+          id: 2,
+          text: "Quelle est la meilleure manière de vérifier une information trouvée en ligne ?",
+          type: "text",
+        ),
+      
+      reponses: [
+        Reponse(id: 5, idQCM: 2, text: "La partager immédiatement avec ses amis", type: "text"),
+        Reponse(id: 6, idQCM: 2, text: "Consulter plusieurs sources fiables et vérifier la cohérence de l’information", type: "text"),
+        Reponse(id: 7, idQCM: 2, text: "Faire confiance à la première source trouvée", type: "text"),
+        Reponse(id: 8, idQCM: 2, text: "Vérifier si l’information est amusante avant de la croire", type: "text"),
+      ],
+    ),
+    QCM(
+      id: 3,
+      numSolution: 2,
+      idCours: 1,
+      idQuestion: 3,
+      question: 
+        Question(
+          id: 3,
+          text: "Quel est un signe révélateur d’une fausse information ?",
+          type: "text",
+        ),
+      
+      reponses: [
+        Reponse(id: 9, idQCM: 3, text: "Elle provient d’un média reconnu et sérieux", type: "text"),
+        Reponse(id: 10, idQCM: 3, text: "Elle utilise un ton sensationnaliste et manque de sources vérifiables", type: "text"),
+        Reponse(id: 11, idQCM: 3, text: "Elle cite plusieurs experts et références", type: "text"),
+        Reponse(id: 12, idQCM: 3, text: "Elle est reprise par plusieurs médias de confiance", type: "text"),
+      ],
+    ),
+  ];
 
   // Insertion des qcm dans la bdd
   for (var qcm in testQCMs) {
@@ -228,22 +196,137 @@ List<QCM> testQCMs = [
       await reponseRepo.insert(reponse);
     }
   }
+
+  // Ajout des autres cours
+  cours = Cours(
+      idModule: moduleId,
+      titre: 'Genres journalistiques',
+      contenu: '');
+  await coursRepository.create(cours);
+
+  cours = Cours(
+      idModule: moduleId,
+      titre: 'Réseaux sociaux',
+      contenu: '');
+  await coursRepository.create(cours);
+
+  cours = Cours(
+      idModule: moduleId,
+      titre: 'Désinformation/Mésinformation',
+      contenu: '');
+  await coursRepository.create(cours);
+}
+
+Future<void> insertModule2() async {
+  // Création du Module
+  final module = Module(
+      titre: 'Producteur de contenus',
+      urlImg: 'lib/data/AppData/facto-societe.png',
+      description: 'Grâce aux technologies modernes, tout le monde est aujourd’hui en mesure de diffuser des informations et de produire des contenus. Mais tout le monde n’a pas appris les codes, règles et enjeux d’une information responsable à destination du grand public. Que vous ayez 1 à 1 million de followers, ce module est fait pour vous !');
+  final moduleId = await moduleRepository.create(module);
+
+  // Création des Cours
+  Cours cours = Cours(
+      idModule: moduleId,
+      titre: 'Ethique professionnelle et personnelle',
+      contenu: '');
+  final coursId = await coursRepository.create(cours);
+
+  cours = Cours(
+      idModule: moduleId,
+      titre: 'Journalisme et production de contenus',
+      contenu: '');
+  await coursRepository.create(cours);
+
+  cours = Cours(
+      idModule: moduleId,
+      titre: 'Risques économiques et sociétaux',
+      contenu: '');
+  await coursRepository.create(cours);
+
+  cours = Cours(
+      idModule: moduleId,
+      titre: 'EMI - Education aux médias et à l’information',
+      contenu: '');
+  await coursRepository.create(cours);
+}
+
+Future<void> insertModule3() async {
+  // Création du Module
+  final module = Module(
+      titre: 'Pros des médias',
+      urlImg: 'lib/data/AppData/facto-societe.png',
+      description: 'Les journalistes sont des professionnels de l’information. Pourtant, face à la profusion des sources et, parfois aussi, à l’urgence des situations, ils ne maîtrisent pas tous les clés d’une information traitée éthiquement, professionnellement et de manière responsable. Pourquoi ne pas profiter de ce module pour réviser ses classiques, voire en apprendre davantage sur les techniques de vérification  les plus performantes ?'
+      );
+  final moduleId = await moduleRepository.create(module);
+
+  // Création des Cours
+  Cours cours = Cours(
+      idModule: moduleId,
+      titre: 'Déontologie',
+      contenu: '');
+  final coursId = await coursRepository.create(cours);
+
+  cours = Cours(
+      idModule: moduleId,
+      titre: 'Osint et Investigation numérique',
+      contenu: '');
+  await coursRepository.create(cours);
+
+  cours = Cours(
+      idModule: moduleId,
+      titre: 'SR et fact-checking',
+      contenu: '');
+  await coursRepository.create(cours);
+
+  cours = Cours(
+      idModule: moduleId,
+      titre: 'EMI - Education aux médias et à l’information',
+      contenu: '');
+  await coursRepository.create(cours);
+
+}
+
+Future<void> insertModule4() async {
+  // Création du Module
+  final module = Module(
+      titre: 'Pour aller plus loin',
+      urlImg: 'lib/data/AppData/facto-societe.png',
+      description: 'Toutes les références et ressources en relation avec l\'Éducation aux médias et à l’information sont répertoriées ici. '
+      );
+  final moduleId = await moduleRepository.create(module);
+
+  // Création des Cours
+  Cours cours = Cours(
+      idModule: moduleId,
+      titre: 'Références bibliographiques',
+      contenu: '');
+  final coursId = await coursRepository.create(cours);
+
+  cours = Cours(
+      idModule: moduleId,
+      titre: 'Ressources en ligne',
+      contenu: '');
+  await coursRepository.create(cours);
+}
+
+Future<void> insertSampleData() async {
+  await DatabaseHelper.instance.resetDatabase();
   
-  // Test des repo de qcm
-  List<int> allidQCMs = await qcmRepo.getAllIdByCoursId(1);
-  print("Test des repo de qcm");
-  for (var idQCM in allidQCMs) {
-    QCM? qcm = await qcmRepo.getById(idQCM);
-    print("QCM récupéré: ${qcm!.id}, Cours: ${qcm!.idCours}");
-    
-    print("Vérification de la question associée...");
-    print("Question: ${qcm!.question!.text}, Type: ${qcm!.question!.type}");
-    
-    print("Vérification des réponses associées...");
-    for (var reponse in qcm!.reponses!) {
-      print("Réponse: ${reponse.text}, Type: ${reponse.type}");
-    }
-  }
+  insertModule1();
+  insertModule2();
+  insertModule3();
+  insertModule4();
+
+  // Init du singleton CoursSelectionne
+  CoursSelectionne coursSelectionne = CoursSelectionne.instance;
+  List<Cours> lstCours = await coursRepository.getAll();
+  coursSelectionne.setCours(lstCours[0]);
+
+  // Init du singleton ModuleSelectionne
+  ModuleSelectionne moduleSelectionne = ModuleSelectionne.instance;
+  List<Module> lstModule = await moduleRepository.getAll();
+  moduleSelectionne.moduleSelectionne = lstModule[0];
 
   /*
   // Création de Mots (Mots pour le MotsCroises)

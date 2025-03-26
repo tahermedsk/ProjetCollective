@@ -63,7 +63,12 @@ class ProgressionUseCase {
       final pagesVues = await pageRepository.getNbPageVisite(coursId);
 
       // Calcul du pourcentage de pages vues
-      final pourcentage = (pagesVues / totalPages) * 100;
+      double pourcentage;
+      if (totalPages>0) {
+        pourcentage = (pagesVues / totalPages) * 100;
+      } else {
+        pourcentage = 0;
+      }
 
       return pourcentage;
     } catch (e) {

@@ -49,7 +49,7 @@ class ContenuCoursView extends StatelessWidget {
                 } else if (media.type == "text") {
                   return ContenuTextWidget(filePath: media.url);
                 } else {
-                  return const SizedBox(); // Cas inconnu
+                  return const Text("Le Media n'a pas le bon type !"); // Cas inconnu
                 }
               }).toList() ?? []
         ),

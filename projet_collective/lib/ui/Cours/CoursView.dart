@@ -81,7 +81,7 @@ class CoursView extends StatelessWidget {
                       bottomNavigationBar: child.runtimeType == DescriptionView ? null : 
                                             FooterWidget(
                                               courseTitle: "Cours 1",
-                                              pageNumber: 1,
+                                              pageNumber: coursViewModel.page,
                                               coursViewModel: coursViewModel,
                                             ), 
                     );
