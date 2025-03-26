@@ -72,71 +72,74 @@ class ListCoursViewState extends State<ListCoursView>{
                                   builder: (context, snapshot) {
                                     return moduleHeader(module, snapshot.data);
                                   } ),
-
-                  //Affiche description et objectif du module en gras à gauche
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child :
-                      Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                          child: 
-                            
-                              const Text(
-                                "Description et Objectif du Module",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                  overflow: TextOverflow.ellipsis,
-                              
-                              ),
-                      ),
-                  ),
-
-                  
-                  
-                  //Description du module
-
-                  Align(
-                    //Alignement du module de gauche à droite
-                    alignment: Alignment.centerLeft,
-                    child :
-                      //Container pour définir les marges.
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
-                        child: 
-                          //Texte de la description
-                          Text(module.description,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.black,
-                            ),
-                            textAlign: TextAlign.left,
-                        
-                          )
-                    ),
-                  ),
                   
 
-                  //Affichage de la liste des cours du module
+                  //Affichage des informations sur le module (description, cours, ...) dans une liste
                   
                   Expanded(
                     child:
                       ListView.builder(
 
+
                       //On initialise le nombre de widgets à affiché par celui de la liste de cours
-                      itemCount: size,
+                      itemCount: size+1,
 
                       itemBuilder: (context, index) {
-                        //On extraie pour chaque élément de la liste le cours dans item
-                        final item = moduleSelectionne.coursDuModule[index];
+
+                        //Si l'index est à 0 : on affiche la description du module, sinon on affiche le cours index-1
+                        if(index==0){
+
+                         return Align(
+                            alignment: Alignment.centerLeft,
+                              child :
+                                Column(
+                                  children: [
+                                    Container(
+                                        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                                        child: 
+                                          
+                                            const Text(
+                                              "Description et Objectif du Module",
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                                textAlign: TextAlign.left,
+                                                overflow: TextOverflow.ellipsis,
+                                            
+                                            ),
+                                    ),
+
+                                    Container(
+                                          margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                                          child: 
+                                            //Texte de la description
+                                            Text(module.description,
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.black,
+                                              ),
+                                              textAlign: TextAlign.left,
+                                          
+                                            )
+                                      ),
+                                  ],
+                                ),
+                            );
+
+                        //Affichage de la liste des cours du module
+                        }else{
+                          //On extraie pour chaque élément de la liste le cours dans item
+                        final item = moduleSelectionne.coursDuModule[index-1];
 
                         //On build le widget à partir du titre d'item
                         return listItem(item, context);
+                        }
+                        
                       },
                       ),
+                    
                   ),  
             	  ],
             	);// Widgets de liste avec données
@@ -163,7 +166,7 @@ class ListCoursViewState extends State<ListCoursView>{
         //Gestion de l'espace entre le contenu et la bordure interieure du widget
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         //Gestion de l'espace entre l'exterieur du widget et les widgets adjacents
-        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 25.0),
+        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
         //Décoration de la bordure
         decoration: BoxDecoration(
         //Gestion de l'angle de la bordure
@@ -174,7 +177,7 @@ class ListCoursViewState extends State<ListCoursView>{
           children: [
 
             //Image à load. Utilise le model media contenant l'url de l'image du model.
-            ContenuImageWidget(media: media, width: 80, height: 80,),
+            ContenuImageWidget(media: media, width: 80 , height: 80,),
 
             const Spacer(),
             
@@ -242,7 +245,7 @@ class ListCoursViewState extends State<ListCoursView>{
           //Gestion de l'espace entre le contenu et la bordure interieure du widget
           padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           //Gestion de l'espace entre l'exterieur du widget et les widgets adjacents
-          margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+          margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
           //On utilise le header de CoursView
           child: FutureBuilder( // Permet d'attendre le calcul de progression 
                                   future: ListCoursViewModel().getProgressionCours(cours), 
