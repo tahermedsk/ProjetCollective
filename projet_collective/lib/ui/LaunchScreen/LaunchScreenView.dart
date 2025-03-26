@@ -56,7 +56,8 @@ class _LaunchScreenViewState extends State<LaunchScreenView> with SingleTickerPr
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    try {
+      return Scaffold(
       body: FadeTransition(
         opacity: _opacityAnimation,
         child: Container(
@@ -77,5 +78,10 @@ class _LaunchScreenViewState extends State<LaunchScreenView> with SingleTickerPr
         ),
       ),
     );
+    } catch (e) {
+      print("Erreur lors du chargement du QCM : $e");
+      return Text("aa");
+    }
+    
   }
 }

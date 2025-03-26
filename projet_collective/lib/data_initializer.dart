@@ -72,7 +72,90 @@ Future<void> insertSampleData() async {
   await objectifCoursRepository.create(objectif2);
   print('Objectifs du cours ajoutés.');
 
+  // Création du Module
+  final module = Module(
+      titre: 'Module de Journalisme',
+      urlImg: 'lib/data/AppData/journalisme.png',
+      description: 'Introduction au journalisme');
+  final moduleId = await moduleRepository.create(module);
 
+  // Création du Cours
+  final cours = Cours(
+      idModule: moduleId,
+      titre: 'Les sources d’informations',
+      contenu: 'Comprendre et évaluer les sources d’information.');
+  final coursId = await coursRepository.create(cours);
+
+  // Ajout des Objectifs du Cours
+  final objectif1 = ObjectifCours(
+    idCours: coursId,
+    description: 'Comprendre les différents types de sources d’information',
+  );
+  final objectif2 = ObjectifCours(
+    idCours: coursId,
+    description: 'Savoir évaluer la crédibilité d’une source',
+  );
+  final objectif3 = ObjectifCours(
+    idCours: coursId,
+    description: 'Identifier les signes de désinformation',
+  );
+  
+  await objectifCoursRepository.create(objectif1);
+  await objectifCoursRepository.create(objectif2);
+  await objectifCoursRepository.create(objectif3);
+
+  // Page 1 : Introduction aux sources d'information
+  Page page1 = Page(idCours: coursId, ordre: 1, description: "Qu'est-ce qu'une source d'information ?");
+  int pageId1 = await pageRepository.create(page1);
+  
+  await mediaCoursRepository.create(MediaCours(
+      idPage: pageId1,
+      ordre: 1,
+      url: 'lib/data/AppData/source_information_definition.txt',
+      type: 'text'));
+
+  await mediaCoursRepository.create(MediaCours(
+      idPage: pageId1,
+      ordre: 2,
+      url: 'lib/data/AppData/journaliste_interview.jpg',
+      type: 'image',
+      caption: 'Journaliste réalisant une interview'));
+
+  // Page 2 : Les différentes sources
+  Page page2 = Page(idCours: coursId, ordre: 2, description: "Types de sources d'information");
+  int pageId2 = await pageRepository.create(page2);
+  
+  await mediaCoursRepository.create(MediaCours(
+      idPage: pageId2,
+      ordre: 1,
+      url: 'lib/data/AppData/types_sources.txt',
+      type: 'text'));
+
+  await mediaCoursRepository.create(MediaCours(
+      idPage: pageId2,
+      ordre: 2,
+      url: 'lib/data/AppData/source_primaire_secondaire.jpg',
+      type: 'image',
+      caption: 'Illustration des sources primaires et secondaires'));
+
+  // Page 3 : Évaluer la crédibilité d'une source
+  Page page3 = Page(idCours: coursId, ordre: 3, description: "Comment vérifier la fiabilité d'une source ?");
+  int pageId3 = await pageRepository.create(page3);
+  
+  await mediaCoursRepository.create(MediaCours(
+      idPage: pageId3,
+      ordre: 1,
+      url: 'lib/data/AppData/evaluer_sources.txt',
+      type: 'text'));
+
+  await mediaCoursRepository.create(MediaCours(
+      idPage: pageId3,
+      ordre: 2,
+      url: 'lib/data/AppData/fake_news_verification.jpg',
+      type: 'image',
+      caption: 'Techniques de vérification des fake news'));
+
+  /*
   // Création d'une Page liée au cours
   Page page = Page(idCours: coursId, urlAudio: "lib/data/AppData/music.mp3", ordre: 1,description: "page 1");
   int pageId = await pageRepository.create(page);
@@ -94,11 +177,10 @@ Future<void> insertSampleData() async {
   mediaCours = MediaCours(
       idPage: pageId,
       ordre: 1,
-      url: 'lib/data/AppData/facto-logo.png',
-      type: 'image',
-      caption: 'logo flutter 2');
+      url: 'lib/data/AppData/explication.txt',
+      type: 'text');
   await mediaCoursRepository.create(mediaCours);
-
+  */
   // Init du singleton CoursSelectionne
   CoursSelectionne coursSelectionne = CoursSelectionne.instance;
   List<Cours> lstCours = await coursRepository.getAll();
