@@ -44,34 +44,6 @@ Future<void> insertSampleData() async {
   final reponseRepo = ReponseRepository();
   final qcmRepo = QCMRepository();
 
-  // Création d'un Module
-  final module = Module(
-      titre: 'Module de Journalisme',
-      urlImg: 'lib/data/AppData/facto-societe.png',
-      description: 'Introduction au journalisme');
-  final moduleId = await moduleRepository.create(module);
-
-  // Création d'une Cours
-  final cours = Cours(
-      idModule: moduleId,
-      titre: 'Introduction à la presse',
-      contenu: 'Le journalisme moderne...');
-  final coursId = await coursRepository.create(cours);
-
-
-  // Création des objectifs du cours
-  final objectif1 = ObjectifCours(
-    idCours: coursId,
-    description: 'Comprendre les bases du journalisme',
-  );
-  final objectif2 = ObjectifCours(
-    idCours: coursId,
-    description: 'Apprendre les techniques d’interview',
-  );
-  await objectifCoursRepository.create(objectif1);
-  await objectifCoursRepository.create(objectif2);
-  print('Objectifs du cours ajoutés.');
-
   // Création du Module
   final module = Module(
       titre: 'Module de Journalisme',
@@ -111,13 +83,13 @@ Future<void> insertSampleData() async {
   await mediaCoursRepository.create(MediaCours(
       idPage: pageId1,
       ordre: 1,
-      url: 'lib/data/AppData/source_information_definition.txt',
+      url: 'lib/data/AppData/Module1/Cours1/source_information_definition.txt',
       type: 'text'));
 
   await mediaCoursRepository.create(MediaCours(
       idPage: pageId1,
       ordre: 2,
-      url: 'lib/data/AppData/journaliste_interview.jpg',
+      url: 'lib/data/AppData/Module1/Cours1/journaliste_interview.jpg',
       type: 'image',
       caption: 'Journaliste réalisant une interview'));
 
@@ -128,13 +100,13 @@ Future<void> insertSampleData() async {
   await mediaCoursRepository.create(MediaCours(
       idPage: pageId2,
       ordre: 1,
-      url: 'lib/data/AppData/types_sources.txt',
+      url: 'lib/data/AppData/Module1/Cours1/types_sources.txt',
       type: 'text'));
 
   await mediaCoursRepository.create(MediaCours(
       idPage: pageId2,
       ordre: 2,
-      url: 'lib/data/AppData/source_primaire_secondaire.jpg',
+      url: 'lib/data/AppData/Module1/Cours1/source_primaire_secondaire.jpg',
       type: 'image',
       caption: 'Illustration des sources primaires et secondaires'));
 
@@ -145,13 +117,13 @@ Future<void> insertSampleData() async {
   await mediaCoursRepository.create(MediaCours(
       idPage: pageId3,
       ordre: 1,
-      url: 'lib/data/AppData/evaluer_sources.txt',
+      url: 'lib/data/AppData/Module1/Cours1/evaluer_sources.txt',
       type: 'text'));
 
   await mediaCoursRepository.create(MediaCours(
       idPage: pageId3,
       ordre: 2,
-      url: 'lib/data/AppData/fake_news_verification.jpg',
+      url: 'lib/data/AppData/Module1/Cours1/fake_news_verification.jpg',
       type: 'image',
       caption: 'Techniques de vérification des fake news'));
 
