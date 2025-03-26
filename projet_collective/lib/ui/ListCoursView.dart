@@ -70,7 +70,10 @@ class ListCoursViewState extends State<ListCoursView>{
                   FutureBuilder( // Permet d'attendre le calcul de progression 
                                   future: ListCoursViewModel().getProgressionModule(module), 
                                   builder: (context, snapshot) {
-                                    return moduleHeader(module, snapshot.data);
+                                    return Container(
+                                      //On veut ajouter une marge ici car on ne peut pas en ajouter directement dans moduleHeader sans l'augmenter dans la liste des modules
+                                      margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+                                      child: moduleHeader(module, snapshot.data));
                                   } ),
                   
 
@@ -166,7 +169,7 @@ class ListCoursViewState extends State<ListCoursView>{
         //Gestion de l'espace entre le contenu et la bordure interieure du widget
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         //Gestion de l'espace entre l'exterieur du widget et les widgets adjacents
-        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+        margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
         //Décoration de la bordure
         decoration: BoxDecoration(
         //Gestion de l'angle de la bordure
@@ -177,7 +180,7 @@ class ListCoursViewState extends State<ListCoursView>{
           children: [
 
             //Image à load. Utilise le model media contenant l'url de l'image du model.
-            ContenuImageWidget(media: media, width: 80 , height: 80,),
+            ContenuImageWidget(media: media, width: 80, height: 80,),
 
             const Spacer(),
             
