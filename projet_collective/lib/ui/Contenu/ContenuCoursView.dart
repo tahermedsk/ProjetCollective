@@ -43,7 +43,7 @@ class ContenuCoursView extends StatelessWidget {
                 print("Media url: ${media.url}");
 
                 if (media.type == "image") {
-                  return ContenuImageWidget(media: media);
+                  return Center(child: ContenuImageWidget(media: media)) ;
                 } else if (media.type == "video") {
                     return ContenuVideoWidget(data: media);
                 } else if (media.type == "text") {

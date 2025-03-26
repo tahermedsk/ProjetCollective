@@ -105,7 +105,7 @@ Future<void> insertModule1() async {
   await mediaCoursRepository.create(MediaCours(
       idPage: pageId2,
       ordre: 2,
-      url: 'lib/data/AppData/Module1/Cours1/source_primaire_secondaire.jpg',
+      url: 'lib/data/AppData/Module1/Cours1/source_primaire_secondaire.png',
       type: 'image',
       caption: 'Illustration des sources primaires et secondaires'));
 
@@ -122,7 +122,7 @@ Future<void> insertModule1() async {
   await mediaCoursRepository.create(MediaCours(
       idPage: pageId3,
       ordre: 2,
-      url: 'lib/data/AppData/Module1/Cours1/fake_news_verification.jpg',
+      url: 'lib/data/AppData/Module1/Cours1/fake_news_verification.png',
       type: 'image',
       caption: 'Techniques de vérification des fake news'));
 
