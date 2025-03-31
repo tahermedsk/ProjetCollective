@@ -197,12 +197,75 @@ Future<void> insertModule1() async {
     }
   }
 
-  // Ajout des autres cours
+
+
+
+
+
+  //ajout d'un autre cours
+
   cours = Cours(
       idModule: moduleId,
       titre: 'Genres journalistiques',
-      contenu: '');
-  await coursRepository.create(cours);
+      contenu: 'Découvrir les genres journalistiques.');
+
+  final coursId2 = await coursRepository.create(cours);
+
+  // Ajout des Objectifs du Cours
+  final objectif4 = ObjectifCours(
+    idCours: coursId2,
+    description: 'Les genres d\'information',
+  );
+  final objectif5 = ObjectifCours(
+    idCours: coursId2,
+    description: 'Les genres d\'opinion',
+  );
+ 
+  
+  await objectifCoursRepository.create(objectif4);
+  await objectifCoursRepository.create(objectif5);
+
+  // Page 4 : Les differents genres d'information
+  Page page4 = Page(idCours: coursId2, ordre: 1, description: "Qu'elle sont les genres d'information ?",urlAudio: 'lib/data/AppData/Module1/Cours1/genre_d_information.mp3');
+  int pageId4 = await pageRepository.create(page4);
+  
+  await mediaCoursRepository.create(MediaCours(
+      idPage: pageId4,
+      ordre: 1,
+      url: 'lib/data/AppData/Module1/Cours1/genre_d_information.txt',
+      type: 'text'));
+
+  await mediaCoursRepository.create(MediaCours(
+      idPage: pageId4,
+      ordre: 2,
+      url: 'lib/data/AppData/Module1/Cours1/genre_d_information.jpg',
+      type: 'image',
+      caption: 'Les genres d\'information'));
+  
+  await mediaCoursRepository.create(MediaCours( 
+    idPage: pageId4,
+    ordre : 3,
+    url : 'lib/data/AppData/Module1/Cours1/genre_d_information2.txt', 
+    type: 'text',
+  ));
+
+  // Page 5 : Les différents genres d'opinion
+  Page page5 = Page(idCours: coursId2, ordre: 2, description: "Les genres d'opinion");
+  int pageId5 = await pageRepository.create(page5);
+  
+  await mediaCoursRepository.create(MediaCours(
+      idPage: pageId5,
+      ordre: 1,
+      url: 'lib/data/AppData/Module1/Cours1/genre_opinion.mp4',
+      type: 'video'));
+
+
+
+
+
+
+  // Ajout des autres cours
+  
 
   cours = Cours(
       idModule: moduleId,
