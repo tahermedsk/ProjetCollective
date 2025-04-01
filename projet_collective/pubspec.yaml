@@ -71,7 +71,7 @@ flutter:
   - lib/data/AppData/
   - lib/data/AppData/CharteFactoscope/
   - lib/data/AppData/Module1/Cours1/
-  - lib/data/AppData/Module2/Cours2/
+  - lib/data/AppData/Module1/Cours2/
   - lib/data/qcm/
 
   #   - images/a_dot_burr.jpeg
